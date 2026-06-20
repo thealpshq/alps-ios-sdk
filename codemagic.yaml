@@ -1,17 +1,24 @@
 ﻿workflows:
   ios-sdk-build:
-    name: Alps iOS SDK Build
+    name: Alps iOS SDK Build & Test App
     instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
       xcode: latest
     scripts:
-      - name: Build iOS SDK Framework
+      - name: Build Test App Archive
         script: |
-          xcodebuild build \
-            -scheme AlpsSDK \
+          xcodebuild archive \
+            -scheme AlpsSDKExample \
             -configuration Release \
             -destination generic/platform=iOS \
-            -derivedDataPath build-output
+            -archivePath build-output/AlpsSDKExample.xcarchive \
+            -derivedDataPath build-output/derived
+      - name: Export IPA
+        script: |
+          xcodebuild -exportArchive \
+            -archivePath build-output/AlpsSDKExample.xcarchive \
+            -exportPath build-output/ipa \
+            -exportOptionsPlist export-options.plist
     artifacts:
-      - build-output/Build/Products/Release-iphoneos/AlpsSDK.swiftmodule/**/*
+      - build-output/ipa/**/*.ipa
