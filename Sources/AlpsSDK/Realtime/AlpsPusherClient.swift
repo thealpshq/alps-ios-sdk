@@ -15,11 +15,8 @@ class AlpsPusherClient {
     )
 
     pusher = Pusher(key: pusherKey, options: options)
-    pusher?.connection.onConnected = { [weak self] in
-      self?.subscribeToConversation(conversationId)
-    }
-
     pusher?.connect()
+    subscribeToConversation(conversationId)
   }
 
   private func subscribeToConversation(_ conversationId: String) {

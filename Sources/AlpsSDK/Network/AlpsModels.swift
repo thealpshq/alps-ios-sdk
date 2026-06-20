@@ -110,9 +110,9 @@ struct SendMessageRequest: Codable {
   let conversationId: String?
   let workspaceId: String?
   let sessionId: String?
-  let source: String = "mobile-sdk"
-  let os: String = "iOS"
-  let priority: String = "normal"
+  var source: String = "mobile-sdk"
+  var os: String = "iOS"
+  var priority: String = "normal"
 }
 
 struct SendMessageResponse: Codable {
