@@ -8,6 +8,6 @@
     scripts:
       - name: Build iOS SDK
         script: |
-          swift build -c release
+          swift build -c release --product AlpsSDK
     artifacts:
       - .build/release/**
