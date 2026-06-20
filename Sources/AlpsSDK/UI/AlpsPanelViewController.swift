@@ -97,7 +97,7 @@ class AlpsPanelViewController: UIViewController {
   }
 
   private func setupTabButtons() {
-    let buttons = [
+    let buttons: [(UIButton, String, Tab)] = [
       (homeButton, "Home", .home),
       (messagesButton, "Messages", .messages),
       (answersButton, "Answers", .answers),
@@ -106,10 +106,10 @@ class AlpsPanelViewController: UIViewController {
     var previousButton: UIButton?
 
     for (button, title, tab) in buttons {
-      button.setTitle(title, for: .normal)
+      button.setTitle(title, for: UIControlState.normal)
       button.translatesAutoresizingMaskIntoConstraints = false
       button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-      button.addTarget(self, action: #selector(tabTapped(_:)), for: .touchUpInside)
+      button.addTarget(self, action: #selector(tabTapped(_:)), for: UIControlEvents.touchUpInside)
       button.tag = buttons.firstIndex(where: { $0.0 == button }) ?? 0
       tabBar.addSubview(button)
 

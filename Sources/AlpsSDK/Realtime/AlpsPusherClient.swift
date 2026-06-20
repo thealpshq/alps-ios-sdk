@@ -28,28 +28,28 @@ class AlpsPusherClient {
     let channel = pusher.subscribe("private-conversation-\(conversationId)")
     self.conversationChannel = channel
 
-    channel.bind(eventName: "message:new") { [weak self] data in
-      self?.handleNewMessage(data)
+    channel.bind(eventName: "message:new") { [weak self] event in
+      if let dict = event.data as? [String: Any] {
+        self?.handleNewMessage(dict)
+      }
     }
 
-    channel.bind(eventName: "client-typing-start") { [weak self] data in
-      if let dict = data as? [String: Any],
+    channel.bind(eventName: "client-typing-start") { [weak self] event in
+      if let dict = event.data as? [String: Any],
          let senderName = dict["senderName"] as? String {
         self?.onTypingIndicator?(senderName)
       }
     }
 
-    channel.bind(eventName: "conversation:status-changed") { [weak self] data in
-      if let dict = data as? [String: Any],
+    channel.bind(eventName: "conversation:status-changed") { [weak self] event in
+      if let dict = event.data as? [String: Any],
          let status = dict["status"] as? String {
         self?.onConversationStatusChanged?(status)
       }
     }
   }
 
-  private func handleNewMessage(_ data: Any) {
-    guard let dict = data as? [String: Any] else { return }
-
+  private func handleNewMessage(_ dict: [String: Any]) {
     do {
       let jsonData = try JSONSerialization.data(withJSONObject: dict)
       let decoder = JSONDecoder()
