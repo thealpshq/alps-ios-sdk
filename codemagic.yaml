@@ -19,11 +19,13 @@
             -configuration Release \
             -destination generic/platform=iOS \
             -archivePath build-output/AlpsSDKExample.xcarchive
-      - name: Export IPA
+      - name: Create IPA
         script: |
-          xcodebuild -exportArchive \
-            -archivePath build-output/AlpsSDKExample.xcarchive \
-            -exportPath build-output/ipa \
-            -exportOptionsPlist export-options.plist
+          mkdir -p build-output/Payload
+          cp -r build-output/AlpsSDKExample.xcarchive/Products/Applications/AlpsSDKExample.app build-output/Payload/
+          cd build-output
+          zip -r AlpsSDKExample.ipa Payload/
+          mkdir -p ipa
+          mv AlpsSDKExample.ipa ipa/
     artifacts:
       - build-output/ipa/**/*.ipa
