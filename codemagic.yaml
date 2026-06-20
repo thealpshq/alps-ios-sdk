@@ -11,7 +11,7 @@
           xcodebuild build \
             -scheme AlpsSDK \
             -configuration Release \
-            -destination generic/platform=iOS
+            -destination generic/platform=iOS \
+            -derivedDataPath build-output
     artifacts:
-      - .build/Build/Products/Release-iphoneos/**/*
-      - .build/release/**/*
+      - build-output/Build/Products/Release-iphoneos/AlpsSDK.swiftmodule/**/*
