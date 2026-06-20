@@ -8,6 +8,6 @@
     scripts:
       - name: Build iOS SDK
         script: |
-          swift build -c release --product AlpsSDK
+          xcodebuild build -scheme AlpsSDK -configuration Release -destination generic/platform=iOS
     artifacts:
       - .build/release/**
