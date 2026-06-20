@@ -12,7 +12,14 @@ class AlpsAPIClient {
 
   func fetchWidgetData(completion: @escaping (Result<WidgetDataResponse, Error>) -> Void) {
     let endpoint = AlpsEndpoints.widgetData(widgetKey: config.widgetKey)
-    request(endpoint, responseType: WidgetDataResponse.self, completion: completion)
+    request(endpoint, responseType: WidgetDataWrapper.self) { result in
+      switch result {
+      case .success(let wrapper):
+        completion(.success(wrapper.data))
+      case .failure(let error):
+        completion(.failure(error))
+      }
+    }
   }
 
   // MARK: - Messages

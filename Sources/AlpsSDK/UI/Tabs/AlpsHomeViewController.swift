@@ -7,7 +7,6 @@ class AlpsHomeViewController: UIViewController {
 
   private let scrollView = UIScrollView()
   private let stackView = UIStackView()
-  private let startButton = UIButton(type: .system)
   private let debugLabel = UILabel()
 
   init(
@@ -70,35 +69,58 @@ class AlpsHomeViewController: UIViewController {
   }
 
   private func populateContent() {
-    // Welcome message
-    if let message = widgetData?.welcomeMessage {
+    guard let data = widgetData else { return }
+
+    let headerCard = UIView()
+    headerCard.backgroundColor = AlpsDesignTokens.dark
+    headerCard.layer.cornerRadius = AlpsDesignTokens.radiusButton
+    headerCard.clipsToBounds = true
+    headerCard.translatesAutoresizingMaskIntoConstraints = false
+    headerCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
+    stackView.addArrangedSubview(headerCard)
+
+    let headerStack = UIStackView()
+    headerStack.axis = .vertical
+    headerStack.spacing = 12
+    headerStack.alignment = .leading
+    headerStack.translatesAutoresizingMaskIntoConstraints = false
+    headerCard.addSubview(headerStack)
+
+    NSLayoutConstraint.activate([
+      headerStack.topAnchor.constraint(equalTo: headerCard.topAnchor, constant: 16),
+      headerStack.leftAnchor.constraint(equalTo: headerCard.leftAnchor, constant: 16),
+      headerStack.rightAnchor.constraint(equalTo: headerCard.rightAnchor, constant: -16),
+      headerStack.bottomAnchor.constraint(equalTo: headerCard.bottomAnchor, constant: -16),
+    ])
+
+    if let message = data.welcomeMessage {
       let label = UILabel()
       label.text = message
       label.numberOfLines = 0
       label.font = UIFont.systemFont(ofSize: 14)
-      label.textColor = .darkGray
-      stackView.addArrangedSubview(label)
+      label.textColor = .white
+      headerStack.addArrangedSubview(label)
     }
 
-    // Online agents
-    if let agents = widgetData?.onlineAgents, !agents.isEmpty {
+    if let agents = data.onlineAgents, !agents.isEmpty {
       let agentsLabel = UILabel()
       agentsLabel.text = "Available Agents"
       agentsLabel.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
-      agentsLabel.textColor = .systemGray
-      stackView.addArrangedSubview(agentsLabel)
+      agentsLabel.textColor = AlpsDesignTokens.textLight
+      headerStack.addArrangedSubview(agentsLabel)
 
       for agent in agents {
         let agentView = UIView()
-        agentView.backgroundColor = .systemGray6
-        agentView.layer.cornerRadius = 8
+        agentView.backgroundColor = UIColor.white.withAlphaComponent(0.1)
+        agentView.layer.cornerRadius = AlpsDesignTokens.radiusCard
         agentView.translatesAutoresizingMaskIntoConstraints = false
-        agentView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        agentView.heightAnchor.constraint(equalToConstant: 40).isActive = true
 
         let nameLabel = UILabel()
         let fullName = "\(agent.firstName ?? "") \(agent.lastName ?? "")".trimmingCharacters(in: .whitespaces)
         nameLabel.text = fullName
-        nameLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        nameLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        nameLabel.textColor = .white
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         agentView.addSubview(nameLabel)
 
@@ -107,27 +129,152 @@ class AlpsHomeViewController: UIViewController {
           nameLabel.centerYAnchor.constraint(equalTo: agentView.centerYAnchor),
         ])
 
-        stackView.addArrangedSubview(agentView)
+        headerStack.addArrangedSubview(agentView)
       }
     }
 
-    // Start button
-    startButton.setTitle("Start Conversation", for: .normal)
-    startButton.backgroundColor = .systemBlue
-    startButton.setTitleColor(.white, for: .normal)
-    startButton.layer.cornerRadius = 8
-    startButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-    startButton.translatesAutoresizingMaskIntoConstraints = false
-    startButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
-    startButton.addTarget(self, action: #selector(didTapStart), for: .touchUpInside)
+    let actionCard = UIView()
+    actionCard.backgroundColor = .white
+    actionCard.layer.borderWidth = 1
+    actionCard.layer.borderColor = AlpsDesignTokens.border.cgColor
+    actionCard.layer.cornerRadius = AlpsDesignTokens.radiusCard
+    actionCard.clipsToBounds = true
+    actionCard.translatesAutoresizingMaskIntoConstraints = false
+    actionCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
+    stackView.addArrangedSubview(actionCard)
 
-    stackView.addArrangedSubview(startButton)
-  }
+    let actionStack = UIStackView()
+    actionStack.axis = .horizontal
+    actionStack.spacing = 12
+    actionStack.alignment = .center
+    actionStack.translatesAutoresizingMaskIntoConstraints = false
+    actionCard.addSubview(actionStack)
 
-  @objc private func didTapStart() {
-    // Navigate to messages tab (handled by parent panel)
-    if let panelVC = parent as? AlpsPanelViewController {
-      panelVC.switchTab(to: .messages)
+    let actionLabel = UILabel()
+    actionLabel.text = "Continue conversation"
+    actionLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+    actionLabel.textColor = AlpsDesignTokens.textMid
+    actionStack.addArrangedSubview(actionLabel)
+
+    let spacer = UIView()
+    actionStack.addArrangedSubview(spacer)
+
+    let chevron = UILabel()
+    chevron.text = "›"
+    chevron.font = UIFont.systemFont(ofSize: 20)
+    chevron.textColor = AlpsDesignTokens.textBody
+    actionStack.addArrangedSubview(chevron)
+
+    NSLayoutConstraint.activate([
+      actionStack.topAnchor.constraint(equalTo: actionCard.topAnchor, constant: 16),
+      actionStack.leftAnchor.constraint(equalTo: actionCard.leftAnchor, constant: 12),
+      actionStack.rightAnchor.constraint(equalTo: actionCard.rightAnchor, constant: -12),
+      actionStack.bottomAnchor.constraint(equalTo: actionCard.bottomAnchor, constant: -16),
+    ])
+
+    let findCard = UIView()
+    findCard.backgroundColor = .white
+    findCard.layer.borderWidth = 1
+    findCard.layer.borderColor = AlpsDesignTokens.border.cgColor
+    findCard.layer.cornerRadius = AlpsDesignTokens.radiusCard
+    findCard.clipsToBounds = true
+    findCard.translatesAutoresizingMaskIntoConstraints = false
+    stackView.addArrangedSubview(findCard)
+
+    let findStack = UIStackView()
+    findStack.axis = .vertical
+    findStack.spacing = 0
+    findStack.alignment = .fill
+    findStack.translatesAutoresizingMaskIntoConstraints = false
+    findCard.addSubview(findStack)
+
+    NSLayoutConstraint.activate([
+      findStack.topAnchor.constraint(equalTo: findCard.topAnchor),
+      findStack.leftAnchor.constraint(equalTo: findCard.leftAnchor),
+      findStack.rightAnchor.constraint(equalTo: findCard.rightAnchor),
+      findStack.bottomAnchor.constraint(equalTo: findCard.bottomAnchor),
+    ])
+
+    let searchBar = UIView()
+    searchBar.backgroundColor = AlpsDesignTokens.searchBg
+    searchBar.translatesAutoresizingMaskIntoConstraints = false
+    searchBar.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    findStack.addArrangedSubview(searchBar)
+
+    let searchIcon = UILabel()
+    searchIcon.text = "🔍"
+    searchIcon.translatesAutoresizingMaskIntoConstraints = false
+    searchBar.addSubview(searchIcon)
+
+    let searchLabel = UILabel()
+    searchLabel.text = "Search for articles and videos"
+    searchLabel.font = UIFont.systemFont(ofSize: 13)
+    searchLabel.textColor = AlpsDesignTokens.textLight
+    searchLabel.translatesAutoresizingMaskIntoConstraints = false
+    searchBar.addSubview(searchLabel)
+
+    NSLayoutConstraint.activate([
+      searchIcon.leftAnchor.constraint(equalTo: searchBar.leftAnchor, constant: 12),
+      searchIcon.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+      searchLabel.leftAnchor.constraint(equalTo: searchIcon.rightAnchor, constant: 8),
+      searchLabel.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+    ])
+
+    let categoriesStack = UIStackView()
+    categoriesStack.axis = .vertical
+    categoriesStack.spacing = 0
+    categoriesStack.alignment = .fill
+    findStack.addArrangedSubview(categoriesStack)
+
+    let displayCategories = data.categories.prefix(4)
+    for (index, category) in displayCategories.enumerated() {
+      let categoryRow = UIView()
+      categoryRow.translatesAutoresizingMaskIntoConstraints = false
+      categoryRow.heightAnchor.constraint(equalToConstant: 48).isActive = true
+      categoriesStack.addArrangedSubview(categoryRow)
+
+      if index > 0 {
+        let separator = UIView()
+        separator.backgroundColor = AlpsDesignTokens.border
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        separator.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        categoriesStack.insertArrangedSubview(separator, at: index * 2 - 1)
+      }
+
+      let rowStack = UIStackView()
+      rowStack.axis = .horizontal
+      rowStack.spacing = 8
+      rowStack.alignment = .center
+      rowStack.translatesAutoresizingMaskIntoConstraints = false
+      categoryRow.addSubview(rowStack)
+
+      NSLayoutConstraint.activate([
+        rowStack.topAnchor.constraint(equalTo: categoryRow.topAnchor),
+        rowStack.leftAnchor.constraint(equalTo: categoryRow.leftAnchor, constant: 12),
+        rowStack.rightAnchor.constraint(equalTo: categoryRow.rightAnchor, constant: -12),
+        rowStack.bottomAnchor.constraint(equalTo: categoryRow.bottomAnchor),
+      ])
+
+      let nameLabel = UILabel()
+      nameLabel.text = category.name
+      nameLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+      nameLabel.textColor = AlpsDesignTokens.textMid
+      rowStack.addArrangedSubview(nameLabel)
+
+      let count = category.articles.count
+      let countLabel = UILabel()
+      countLabel.text = "\(count)"
+      countLabel.font = UIFont.systemFont(ofSize: 12)
+      countLabel.textColor = AlpsDesignTokens.textBody
+      rowStack.addArrangedSubview(countLabel)
+
+      rowStack.addArrangedSubview(UIView())
+
+      let chevron2 = UILabel()
+      chevron2.text = "›"
+      chevron2.font = UIFont.systemFont(ofSize: 18)
+      chevron2.textColor = AlpsDesignTokens.textLight
+      rowStack.addArrangedSubview(chevron2)
     }
   }
 

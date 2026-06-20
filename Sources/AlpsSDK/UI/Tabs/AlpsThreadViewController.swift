@@ -9,10 +9,13 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
   private let inputContainer = UIView()
   private let messageInput = UITextView()
   private let sendButton = UIButton(type: .system)
-  private let preChatFormView = UIView()
+  private let emojiButton = UIButton(type: .system)
+  private var nameField: UITextField?
+  private var emailField: UITextField?
   private var messages: [Message] = []
   private var pusherClient: AlpsPusherClient?
   private var showPreChatForm = false
+  private var inputBottomConstraint: NSLayoutConstraint?
 
   init(
     config: AlpsConfig,
@@ -72,7 +75,6 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
   }
 
   private func setupMessageThread() {
-    // Table view for messages
     tableView.dataSource = self
     tableView.delegate = self
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "messageCell")
@@ -81,30 +83,40 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
     tableView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(tableView)
 
-    // Input container
-    inputContainer.backgroundColor = .systemGray6
+    inputContainer.backgroundColor = .white
     inputContainer.translatesAutoresizingMaskIntoConstraints = false
+    inputContainer.layer.borderWidth = 1.5
+    inputContainer.layer.borderColor = AlpsDesignTokens.border.cgColor
     view.addSubview(inputContainer)
 
-    // Message input
-    messageInput.font = UIFont.systemFont(ofSize: 14)
-    messageInput.layer.cornerRadius = 8
+    messageInput.font = UIFont.systemFont(ofSize: 13)
+    messageInput.layer.cornerRadius = AlpsDesignTokens.radiusInput
     messageInput.clipsToBounds = true
     messageInput.translatesAutoresizingMaskIntoConstraints = false
-    messageInput.backgroundColor = .white
-    messageInput.text = "Type a message..."
-    messageInput.textColor = .systemGray
+    messageInput.backgroundColor = AlpsDesignTokens.searchBg
+    messageInput.textColor = AlpsDesignTokens.textMid
     messageInput.delegate = self
+    messageInput.isScrollEnabled = false
     inputContainer.addSubview(messageInput)
 
-    // Send button
-    sendButton.setTitle("Send", for: .normal)
-    sendButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+    emojiButton.setTitle("😀", for: .normal)
+    emojiButton.translatesAutoresizingMaskIntoConstraints = false
+    emojiButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+    inputContainer.addSubview(emojiButton)
+
     sendButton.translatesAutoresizingMaskIntoConstraints = false
+    let sendConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
+    let sendImage = UIImage(systemName: "arrow.up", withConfiguration: sendConfig)
+    sendButton.setImage(sendImage, for: .normal)
+    sendButton.tintColor = .white
+    sendButton.backgroundColor = AlpsDesignTokens.dark
+    sendButton.layer.cornerRadius = 16
+    sendButton.clipsToBounds = true
+    sendButton.widthAnchor.constraint(equalToConstant: 32).isActive = true
+    sendButton.heightAnchor.constraint(equalToConstant: 32).isActive = true
     sendButton.addTarget(self, action: #selector(didTapSend), for: .touchUpInside)
     inputContainer.addSubview(sendButton)
 
-    // Constraints
     NSLayoutConstraint.activate([
       tableView.topAnchor.constraint(equalTo: view.topAnchor),
       tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -113,62 +125,69 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
 
       inputContainer.leftAnchor.constraint(equalTo: view.leftAnchor),
       inputContainer.rightAnchor.constraint(equalTo: view.rightAnchor),
-      inputContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-      inputContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 60),
+      inputContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 56),
 
-      messageInput.topAnchor.constraint(equalTo: inputContainer.topAnchor, constant: 8),
+      messageInput.topAnchor.constraint(equalTo: inputContainer.topAnchor, constant: 12),
       messageInput.leftAnchor.constraint(equalTo: inputContainer.leftAnchor, constant: 12),
-      messageInput.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -8),
-      messageInput.rightAnchor.constraint(equalTo: sendButton.leftAnchor, constant: -8),
-      messageInput.heightAnchor.constraint(greaterThanOrEqualToConstant: 40),
+      messageInput.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -12),
+      messageInput.heightAnchor.constraint(greaterThanOrEqualToConstant: 32),
+      messageInput.heightAnchor.constraint(lessThanOrEqualToConstant: 96),
 
-      sendButton.rightAnchor.constraint(equalTo: inputContainer.rightAnchor, constant: -12),
+      emojiButton.leftAnchor.constraint(equalTo: messageInput.rightAnchor, constant: 8),
+      emojiButton.centerYAnchor.constraint(equalTo: messageInput.centerYAnchor),
+
+      sendButton.leftAnchor.constraint(equalTo: emojiButton.rightAnchor, constant: 8),
       sendButton.centerYAnchor.constraint(equalTo: messageInput.centerYAnchor),
-      sendButton.widthAnchor.constraint(equalToConstant: 50),
+      sendButton.rightAnchor.constraint(equalTo: inputContainer.rightAnchor, constant: -12),
     ])
+
+    inputBottomConstraint = inputContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+    inputBottomConstraint?.isActive = true
   }
 
   private func setupPreChatForm() {
-    preChatFormView.backgroundColor = .white
-    preChatFormView.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(preChatFormView)
+    let overlay = UIView()
+    overlay.backgroundColor = .white
+    overlay.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(overlay)
 
     NSLayoutConstraint.activate([
-      preChatFormView.topAnchor.constraint(equalTo: view.topAnchor),
-      preChatFormView.leftAnchor.constraint(equalTo: view.leftAnchor),
-      preChatFormView.rightAnchor.constraint(equalTo: view.rightAnchor),
-      preChatFormView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      overlay.topAnchor.constraint(equalTo: view.topAnchor),
+      overlay.leftAnchor.constraint(equalTo: view.leftAnchor),
+      overlay.rightAnchor.constraint(equalTo: view.rightAnchor),
+      overlay.bottomAnchor.constraint(equalTo: view.bottomAnchor),
     ])
 
     let stack = UIStackView()
     stack.axis = .vertical
     stack.spacing = 16
     stack.translatesAutoresizingMaskIntoConstraints = false
-    preChatFormView.addSubview(stack)
+    overlay.addSubview(stack)
 
     let titleLabel = UILabel()
     titleLabel.text = "Before we chat..."
     titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+    titleLabel.textColor = AlpsDesignTokens.textMid
     stack.addArrangedSubview(titleLabel)
 
-    let nameField = UITextField()
-    nameField.placeholder = "Your name"
-    nameField.borderStyle = .roundedRect
-    nameField.translatesAutoresizingMaskIntoConstraints = false
-    nameField.heightAnchor.constraint(equalToConstant: 44).isActive = true
-    stack.addArrangedSubview(nameField)
+    nameField = UITextField()
+    nameField!.placeholder = "Your name"
+    nameField!.borderStyle = .roundedRect
+    nameField!.translatesAutoresizingMaskIntoConstraints = false
+    nameField!.heightAnchor.constraint(equalToConstant: 44).isActive = true
+    stack.addArrangedSubview(nameField!)
 
-    let emailField = UITextField()
-    emailField.placeholder = "Your email"
-    emailField.borderStyle = .roundedRect
-    emailField.keyboardType = .emailAddress
-    emailField.translatesAutoresizingMaskIntoConstraints = false
-    emailField.heightAnchor.constraint(equalToConstant: 44).isActive = true
-    stack.addArrangedSubview(emailField)
+    emailField = UITextField()
+    emailField!.placeholder = "Your email"
+    emailField!.borderStyle = .roundedRect
+    emailField!.keyboardType = .emailAddress
+    emailField!.translatesAutoresizingMaskIntoConstraints = false
+    emailField!.heightAnchor.constraint(equalToConstant: 44).isActive = true
+    stack.addArrangedSubview(emailField!)
 
     let submitButton = UIButton(type: .system)
     submitButton.setTitle("Continue", for: .normal)
-    submitButton.backgroundColor = .systemBlue
+    submitButton.backgroundColor = AlpsDesignTokens.dark
     submitButton.setTitleColor(.white, for: .normal)
     submitButton.layer.cornerRadius = 8
     submitButton.translatesAutoresizingMaskIntoConstraints = false
@@ -176,23 +195,16 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
     submitButton.addTarget(self, action: #selector(submitPreChatForm), for: .touchUpInside)
     stack.addArrangedSubview(submitButton)
 
-    submitButton.tag = 1 // Store reference
-
     NSLayoutConstraint.activate([
-      stack.topAnchor.constraint(equalTo: preChatFormView.topAnchor, constant: 32),
-      stack.leftAnchor.constraint(equalTo: preChatFormView.leftAnchor, constant: 16),
-      stack.rightAnchor.constraint(equalTo: preChatFormView.rightAnchor, constant: -16),
+      stack.topAnchor.constraint(equalTo: overlay.safeAreaLayoutGuide.topAnchor, constant: 32),
+      stack.leftAnchor.constraint(equalTo: overlay.leftAnchor, constant: 16),
+      stack.rightAnchor.constraint(equalTo: overlay.rightAnchor, constant: -16),
     ])
   }
 
   @objc private func submitPreChatForm() {
-    guard let nameField = view.viewWithTag(1)?.subviews[0] as? UITextField,
-          let emailField = view.viewWithTag(1)?.subviews[1] as? UITextField else {
-      return
-    }
-
-    let name = nameField.text ?? ""
-    let email = emailField.text ?? ""
+    let name = nameField?.text ?? ""
+    let email = emailField?.text ?? ""
 
     guard !name.isEmpty, !email.isEmpty else { return }
 
@@ -200,7 +212,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
     config.visitorEmail = email
     AlpsVisitorStore.save(config: config)
 
-    preChatFormView.removeFromSuperview()
+    view.subviews.forEach { $0.removeFromSuperview() }
     showPreChatForm = false
     setupMessageThread()
   }
@@ -232,7 +244,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
   }
 
   @objc private func didTapSend() {
-    guard let text = messageInput.text, !text.isEmpty, text != "Type a message..." else {
+    guard let text = messageInput.text, !text.trimmingCharacters(in: .whitespaces).isEmpty else {
       return
     }
 
@@ -247,8 +259,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
           AlpsVisitorStore.saveConversationId(response.conversationId, for: self?.config.widgetKey ?? "")
           self?.messages.append(response.message)
           self?.tableView.reloadData()
-          self?.messageInput.text = "Type a message..."
-          self?.messageInput.textColor = .systemGray
+          self?.messageInput.text = ""
           self?.scrollToBottom()
         case .failure(let error):
           print("[ThreadVC] Failed to send message: \(error)")
@@ -280,30 +291,28 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
   }
 
   @objc private func keyboardWillShow(notification: NSNotification) {
+    if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+      inputBottomConstraint?.constant = -keyboardHeight
+      UIView.animate(withDuration: 0.3) {
+        self.view.layoutIfNeeded()
+      }
+    }
     scrollToBottom()
   }
 
-  @objc private func keyboardWillHide(notification: NSNotification) {
-    scrollToBottom()
-  }
-
-  // MARK: - UITextViewDelegate
-
-  func textViewDidBeginEditing(_ textView: UITextView) {
-    if textView.textColor == .systemGray {
-      textView.text = nil
-      textView.textColor = .black
+  @objc private func keyboardWillHide() {
+    inputBottomConstraint?.constant = 0
+    UIView.animate(withDuration: 0.3) {
+      self.view.layoutIfNeeded()
     }
   }
 
-  func textViewDidEndEditing(_ textView: UITextView) {
-    if textView.text.isEmpty {
-      textView.text = "Type a message..."
-      textView.textColor = .systemGray
-    }
+  func textViewDidChange(_ textView: UITextView) {
+    let size = textView.sizeThatFits(CGSize(width: textView.bounds.width, height: CGFloat.greatestFiniteMagnitude))
+    let maxHeight: CGFloat = 96
+    let newHeight = min(size.height, maxHeight)
+    textView.isScrollEnabled = size.height > maxHeight
   }
-
-  // MARK: - UITableViewDataSource
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     messages.count
@@ -319,44 +328,32 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
 
     let isFromCustomer = message.direction == "outbound"
 
-    // Message bubble
     let bubbleView = UIView()
-    bubbleView.backgroundColor = isFromCustomer ? .systemBlue : .systemGray6
-    bubbleView.layer.cornerRadius = 12
     bubbleView.clipsToBounds = true
     bubbleView.translatesAutoresizingMaskIntoConstraints = false
     cell.contentView.addSubview(bubbleView)
 
-    // Message label
+    if isFromCustomer {
+      bubbleView.backgroundColor = AlpsDesignTokens.searchBg
+      bubbleView.layer.cornerRadius = 16
+    } else {
+      bubbleView.backgroundColor = AlpsDesignTokens.dark
+      bubbleView.layer.cornerRadius = 8
+    }
+
     let label = UILabel()
     label.text = message.content
-    label.textColor = isFromCustomer ? .white : .black
+    label.textColor = isFromCustomer ? AlpsDesignTokens.dark : .white
     label.numberOfLines = 0
-    label.font = UIFont.systemFont(ofSize: 14)
+    label.font = UIFont.systemFont(ofSize: 13)
     label.translatesAutoresizingMaskIntoConstraints = false
     bubbleView.addSubview(label)
 
-    // Sender name (for agent messages)
-    if !isFromCustomer, let senderName = message.senderName {
-      let senderLabel = UILabel()
-      senderLabel.text = senderName
-      senderLabel.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
-      senderLabel.textColor = .systemGray
-      senderLabel.translatesAutoresizingMaskIntoConstraints = false
-      cell.contentView.insertSubview(senderLabel, belowSubview: bubbleView)
-
-      NSLayoutConstraint.activate([
-        senderLabel.bottomAnchor.constraint(equalTo: bubbleView.topAnchor, constant: -4),
-        senderLabel.leftAnchor.constraint(equalTo: bubbleView.leftAnchor),
-      ])
-    }
-
-    // Constraints
     NSLayoutConstraint.activate([
-      label.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 8),
-      label.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -8),
-      label.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 12),
-      label.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: -12),
+      label.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 10),
+      label.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -10),
+      label.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 14),
+      label.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: -14),
     ])
 
     if isFromCustomer {
@@ -367,6 +364,20 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
         bubbleView.widthAnchor.constraint(lessThanOrEqualTo: cell.contentView.widthAnchor, multiplier: 0.75),
       ])
     } else {
+      if let senderName = message.senderName {
+        let senderLabel = UILabel()
+        senderLabel.text = senderName
+        senderLabel.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        senderLabel.textColor = AlpsDesignTokens.textMid
+        senderLabel.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.insertSubview(senderLabel, belowSubview: bubbleView)
+
+        NSLayoutConstraint.activate([
+          senderLabel.bottomAnchor.constraint(equalTo: bubbleView.topAnchor, constant: -4),
+          senderLabel.leftAnchor.constraint(equalTo: bubbleView.leftAnchor),
+        ])
+      }
+
       NSLayoutConstraint.activate([
         bubbleView.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 16),
         bubbleView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 8),

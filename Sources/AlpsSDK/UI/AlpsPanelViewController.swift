@@ -9,6 +9,7 @@ class AlpsPanelViewController: UIViewController {
   private let homeButton = UIButton(type: .system)
   private let messagesButton = UIButton(type: .system)
   private let answersButton = UIButton(type: .system)
+  private let tabUnderline = UIView()
   private let contentView = UIView()
   private var currentTab: Tab = .home
   private var homeViewController: AlpsHomeViewController?
@@ -45,9 +46,8 @@ class AlpsPanelViewController: UIViewController {
   }
 
   private func setupUI() {
-    // Header
     let header = UIView()
-    header.backgroundColor = .systemGray6
+    header.backgroundColor = AlpsDesignTokens.dark
     header.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(header)
 
@@ -55,37 +55,74 @@ class AlpsPanelViewController: UIViewController {
       header.topAnchor.constraint(equalTo: view.topAnchor),
       header.leftAnchor.constraint(equalTo: view.leftAnchor),
       header.rightAnchor.constraint(equalTo: view.rightAnchor),
-      header.heightAnchor.constraint(equalToConstant: 60),
+      header.heightAnchor.constraint(equalToConstant: 56),
+    ])
+
+    let headerStack = UIStackView()
+    headerStack.axis = .horizontal
+    headerStack.spacing = 12
+    headerStack.alignment = .center
+    headerStack.translatesAutoresizingMaskIntoConstraints = false
+    header.addSubview(headerStack)
+
+    NSLayoutConstraint.activate([
+      headerStack.leftAnchor.constraint(equalTo: header.leftAnchor, constant: 16),
+      headerStack.centerYAnchor.constraint(equalTo: header.centerYAnchor),
+    ])
+
+    let avatar = UIView()
+    avatar.backgroundColor = AlpsDesignTokens.avatarBg
+    avatar.layer.cornerRadius = 21
+    avatar.clipsToBounds = true
+    avatar.translatesAutoresizingMaskIntoConstraints = false
+    avatar.widthAnchor.constraint(equalToConstant: 42).isActive = true
+    avatar.heightAnchor.constraint(equalToConstant: 42).isActive = true
+    headerStack.addArrangedSubview(avatar)
+
+    let initials = UILabel()
+    let teamName = widgetData?.teamName ?? "A"
+    initials.text = String(teamName.prefix(1)).uppercased()
+    initials.textColor = .white
+    initials.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+    initials.textAlignment = .center
+    initials.translatesAutoresizingMaskIntoConstraints = false
+    avatar.addSubview(initials)
+
+    NSLayoutConstraint.activate([
+      initials.centerXAnchor.constraint(equalTo: avatar.centerXAnchor),
+      initials.centerYAnchor.constraint(equalTo: avatar.centerYAnchor),
     ])
 
     let titleLabel = UILabel()
     titleLabel.text = widgetData?.teamName ?? "Support"
-    titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-    titleLabel.translatesAutoresizingMaskIntoConstraints = false
-    header.addSubview(titleLabel)
+    titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+    titleLabel.textColor = .white
+    headerStack.addArrangedSubview(titleLabel)
 
-    NSLayoutConstraint.activate([
-      titleLabel.leftAnchor.constraint(equalTo: header.leftAnchor, constant: 16),
-      titleLabel.centerYAnchor.constraint(equalTo: header.centerYAnchor),
-    ])
-
-    // Tab Bar
     tabBar.backgroundColor = .white
     tabBar.translatesAutoresizingMaskIntoConstraints = false
-    tabBar.layer.borderBottomWidth = 1
-    tabBar.layer.borderColor = UIColor.systemGray5.cgColor
     view.addSubview(tabBar)
 
     NSLayoutConstraint.activate([
       tabBar.topAnchor.constraint(equalTo: header.bottomAnchor),
       tabBar.leftAnchor.constraint(equalTo: view.leftAnchor),
       tabBar.rightAnchor.constraint(equalTo: view.rightAnchor),
-      tabBar.heightAnchor.constraint(equalToConstant: 50),
+      tabBar.heightAnchor.constraint(equalToConstant: 48),
     ])
 
     setupTabButtons()
 
-    // Content View
+    tabUnderline.backgroundColor = AlpsDesignTokens.dark
+    tabUnderline.translatesAutoresizingMaskIntoConstraints = false
+    tabBar.addSubview(tabUnderline)
+
+    NSLayoutConstraint.activate([
+      tabUnderline.bottomAnchor.constraint(equalTo: tabBar.bottomAnchor),
+      tabUnderline.heightAnchor.constraint(equalToConstant: 2),
+      tabUnderline.widthAnchor.constraint(equalTo: tabBar.widthAnchor, multiplier: 1.0 / 3.0),
+      tabUnderline.leftAnchor.constraint(equalTo: tabBar.leftAnchor),
+    ])
+
     contentView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(contentView)
 
@@ -109,7 +146,8 @@ class AlpsPanelViewController: UIViewController {
     for (button, title, _) in buttons {
       button.setTitle(title, for: .normal)
       button.translatesAutoresizingMaskIntoConstraints = false
-      button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+      button.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+      button.setTitleColor(AlpsDesignTokens.textBody, for: .normal)
       button.addTarget(self, action: #selector(tabTapped(_:)), for: .touchUpInside)
       button.tag = buttons.firstIndex(where: { $0.0 == button }) ?? 0
       tabBar.addSubview(button)
@@ -141,7 +179,6 @@ class AlpsPanelViewController: UIViewController {
     currentTab = tab
     updateTabButtonStates()
 
-    // Remove previous content
     contentView.subviews.forEach { $0.removeFromSuperview() }
 
     switch tab {
@@ -156,20 +193,29 @@ class AlpsPanelViewController: UIViewController {
 
   private func updateTabButtonStates() {
     [homeButton, messagesButton, answersButton].forEach { btn in
-      btn.setTitleColor(.systemGray, for: .normal)
+      btn.setTitleColor(AlpsDesignTokens.textBody, for: .normal)
     }
 
     let activeButton: UIButton
+    let tabIndex: CGFloat
     switch currentTab {
     case .home:
       activeButton = homeButton
+      tabIndex = 0
     case .messages:
       activeButton = messagesButton
+      tabIndex = 1
     case .answers:
       activeButton = answersButton
+      tabIndex = 2
     }
 
-    activeButton.setTitleColor(.systemBlue, for: .normal)
+    activeButton.setTitleColor(AlpsDesignTokens.dark, for: .normal)
+
+    UIView.animate(withDuration: 0.2) {
+      let newX = tabIndex * (self.tabBar.bounds.width / 3.0)
+      self.tabUnderline.frame.origin.x = newX
+    }
   }
 
   private func showHomeTab() {
@@ -275,22 +321,6 @@ class AlpsPanelViewController: UIViewController {
       if config.conversationId == nil {
         config.conversationId = stored.conversationId
       }
-    }
-  }
-}
-
-// MARK: - Layer Border Extension
-
-extension CALayer {
-  var borderBottomWidth: CGFloat {
-    get { 0 }
-    set {
-      let path = UIBezierPath(
-        rect: CGRect(x: 0, y: bounds.height - newValue, width: bounds.width, height: newValue)
-      )
-      let shapeLayer = CAShapeLayer()
-      shapeLayer.path = path.cgPath
-      shapeLayer.fillColor = borderColor ?? UIColor.clear.cgColor
     }
   }
 }

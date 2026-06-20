@@ -1,11 +1,11 @@
 import UIKit
 
-class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
   let config: AlpsConfig
   let apiClient: AlpsAPIClient
   var widgetData: WidgetDataResponse?
 
-  private let searchBar = UISearchBar()
+  private let searchField = UITextField()
   private let tableView = UITableView()
   private let emptyStateLabel = UILabel()
   private var articles: [Article] = []
@@ -36,43 +36,59 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
   }
 
   private func setupUI() {
-    // Search bar
-    searchBar.delegate = self
-    searchBar.placeholder = "Search help articles..."
-    searchBar.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(searchBar)
+    let searchContainer = UIView()
+    searchContainer.backgroundColor = AlpsDesignTokens.searchBg
+    searchContainer.layer.cornerRadius = AlpsDesignTokens.radiusInput
+    searchContainer.clipsToBounds = true
+    searchContainer.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(searchContainer)
 
-    NSLayoutConstraint.activate([
-      searchBar.topAnchor.constraint(equalTo: view.topAnchor),
-      searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
-      searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
-      searchBar.heightAnchor.constraint(equalToConstant: 56),
-    ])
+    let searchIcon = UILabel()
+    searchIcon.text = "🔍"
+    searchIcon.translatesAutoresizingMaskIntoConstraints = false
+    searchContainer.addSubview(searchIcon)
 
-    // Table view
+    searchField.placeholder = "Search for articles and videos"
+    searchField.font = UIFont.systemFont(ofSize: 13)
+    searchField.textColor = AlpsDesignTokens.textMid
+    searchField.borderStyle = .none
+    searchField.delegate = self
+    searchField.translatesAutoresizingMaskIntoConstraints = false
+    searchContainer.addSubview(searchField)
+
     tableView.dataSource = self
     tableView.delegate = self
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "articleCell")
+    tableView.separatorColor = AlpsDesignTokens.border
     tableView.separatorStyle = .singleLine
     tableView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(tableView)
 
-    NSLayoutConstraint.activate([
-      tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
-      tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
-      tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
-      tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-    ])
-
-    // Empty state
     emptyStateLabel.text = "No articles found"
     emptyStateLabel.textAlignment = .center
-    emptyStateLabel.textColor = .systemGray
+    emptyStateLabel.textColor = AlpsDesignTokens.textBody
     emptyStateLabel.isHidden = true
     emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(emptyStateLabel)
 
     NSLayoutConstraint.activate([
+      searchContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+      searchContainer.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+      searchContainer.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
+      searchContainer.heightAnchor.constraint(equalToConstant: 40),
+
+      searchIcon.leftAnchor.constraint(equalTo: searchContainer.leftAnchor, constant: 12),
+      searchIcon.centerYAnchor.constraint(equalTo: searchContainer.centerYAnchor),
+
+      searchField.leftAnchor.constraint(equalTo: searchIcon.rightAnchor, constant: 8),
+      searchField.rightAnchor.constraint(equalTo: searchContainer.rightAnchor, constant: -12),
+      searchField.centerYAnchor.constraint(equalTo: searchContainer.centerYAnchor),
+
+      tableView.topAnchor.constraint(equalTo: searchContainer.bottomAnchor, constant: 12),
+      tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+      tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+      tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
       emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       emptyStateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
     ])
@@ -91,12 +107,10 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
     updateEmptyState()
   }
 
-  // MARK: - UISearchBarDelegate
-
-  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+  func textFieldDidChangeSelection(_ UITextField: UITextField) {
     searchTask?.cancel()
 
-    guard !searchText.isEmpty else {
+    guard let searchText = searchField.text, !searchText.isEmpty else {
       isSearching = false
       articles = allArticles.prefix(5).map { $0 }
       tableView.reloadData()
@@ -125,64 +139,71 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: task)
   }
 
-  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    searchBar.resignFirstResponder()
-  }
-
   private func updateEmptyState() {
     emptyStateLabel.isHidden = !articles.isEmpty
     tableView.isHidden = articles.isEmpty
   }
-
-  // MARK: - UITableViewDataSource
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     articles.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "articleCell", for: indexPath)
+    let cell = UITableViewCell(style: .default, reuseIdentifier: "articleCell")
     let article = articles[indexPath.row]
 
     cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+    cell.selectionStyle = .gray
+    cell.backgroundColor = .white
 
     let titleLabel = UILabel()
     titleLabel.text = article.title
     titleLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
     titleLabel.numberOfLines = 2
+    titleLabel.textColor = AlpsDesignTokens.textMid
     titleLabel.translatesAutoresizingMaskIntoConstraints = false
     cell.contentView.addSubview(titleLabel)
+
+    let chevron = UILabel()
+    chevron.text = "›"
+    chevron.font = UIFont.systemFont(ofSize: 24)
+    chevron.textColor = AlpsDesignTokens.textLight
+    chevron.translatesAutoresizingMaskIntoConstraints = false
+    cell.contentView.addSubview(chevron)
 
     if let description = article.description {
       let descLabel = UILabel()
       descLabel.text = description
       descLabel.font = UIFont.systemFont(ofSize: 12)
-      descLabel.textColor = .systemGray
+      descLabel.textColor = AlpsDesignTokens.textBody
       descLabel.numberOfLines = 2
       descLabel.translatesAutoresizingMaskIntoConstraints = false
       cell.contentView.addSubview(descLabel)
 
       NSLayoutConstraint.activate([
-        titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 8),
+        titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 12),
         titleLabel.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 16),
-        titleLabel.rightAnchor.constraint(equalTo: cell.contentView.rightAnchor, constant: -16),
+        titleLabel.rightAnchor.constraint(equalTo: chevron.leftAnchor, constant: -12),
 
         descLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
         descLabel.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 16),
-        descLabel.rightAnchor.constraint(equalTo: cell.contentView.rightAnchor, constant: -16),
-        descLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -8),
+        descLabel.rightAnchor.constraint(equalTo: chevron.leftAnchor, constant: -12),
+        descLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -12),
+
+        chevron.rightAnchor.constraint(equalTo: cell.contentView.rightAnchor, constant: -12),
+        chevron.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
       ])
     } else {
       NSLayoutConstraint.activate([
-        titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 12),
+        titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 16),
         titleLabel.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 16),
-        titleLabel.rightAnchor.constraint(equalTo: cell.contentView.rightAnchor, constant: -16),
-        titleLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -12),
+        titleLabel.rightAnchor.constraint(equalTo: chevron.leftAnchor, constant: -12),
+        titleLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -16),
+
+        chevron.rightAnchor.constraint(equalTo: cell.contentView.rightAnchor, constant: -12),
+        chevron.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
       ])
     }
-
-    cell.accessoryType = .disclosureIndicator
-    cell.selectionStyle = .gray
 
     return cell
   }
@@ -190,8 +211,6 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     UITableView.automaticDimension
   }
-
-  // MARK: - UITableViewDelegate
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
@@ -208,7 +227,13 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
 
   func updateWidgetData(_ data: WidgetDataResponse) {
     widgetData = data
-    allArticles = (data.categories ?? []).flatMap { $0.articles }
+    allArticles = (data.categories).flatMap { $0.articles }
     loadFeaturedArticles()
+  }
+
+  func showError(_ error: String) {
+    emptyStateLabel.text = "Error loading articles"
+    emptyStateLabel.isHidden = false
+    tableView.isHidden = true
   }
 }

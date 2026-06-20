@@ -1,5 +1,16 @@
 import Foundation
 
+// MARK: - API Response Wrapper
+
+struct ApiResponse<T: Codable>: Codable {
+  let status: String
+  let data: T?
+}
+
+struct WidgetDataWrapper: Codable {
+  let data: WidgetDataResponse
+}
+
 // MARK: - Widget Data Response
 
 struct WidgetDataResponse: Codable {
