@@ -3,7 +3,24 @@ settings:
   MARKETING_VERSION: "1.0.0"
   CURRENT_PROJECT_VERSION: "1"
 
+packages:
+  PusherSwift:
+    url: https://github.com/pusher/pusher-websocket-swift
+    from: 10.1.5
+
 targets:
+  AlpsSDK:
+    type: framework
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: Sources/AlpsSDK
+    dependencies:
+      - package: PusherSwift
+    settings:
+      BUNDLE_IDENTIFIER: com.tryalps.sdk
+      IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+
   AlpsSDKExample:
     type: application
     platform: iOS
@@ -12,6 +29,8 @@ targets:
       - path: Example/AlpsSDKExample
     resources:
       - path: Example/AlpsSDKExample
+    dependencies:
+      - target: AlpsSDK
     settings:
       BUNDLE_IDENTIFIER: com.tryalps.sdk.example
       CODE_SIGN_IDENTITY: ""
