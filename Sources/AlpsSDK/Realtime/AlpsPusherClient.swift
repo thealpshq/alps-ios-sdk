@@ -29,20 +29,26 @@ class AlpsPusherClient {
     self.conversationChannel = channel
 
     channel.bind(eventName: "message:new") { [weak self] event in
-      if let dict = event.data as? [String: Any] {
+      if let jsonString = event.data,
+         let jsonData = jsonString.data(using: .utf8),
+         let dict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
         self?.handleNewMessage(dict)
       }
     }
 
     channel.bind(eventName: "client-typing-start") { [weak self] event in
-      if let dict = event.data as? [String: Any],
+      if let jsonString = event.data,
+         let jsonData = jsonString.data(using: .utf8),
+         let dict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
          let senderName = dict["senderName"] as? String {
         self?.onTypingIndicator?(senderName)
       }
     }
 
     channel.bind(eventName: "conversation:status-changed") { [weak self] event in
-      if let dict = event.data as? [String: Any],
+      if let jsonString = event.data,
+         let jsonData = jsonString.data(using: .utf8),
+         let dict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
          let status = dict["status"] as? String {
         self?.onConversationStatusChanged?(status)
       }

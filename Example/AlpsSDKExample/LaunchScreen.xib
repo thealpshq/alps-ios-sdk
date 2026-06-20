@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19519" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="NO">
+  <device type="retina4_7" orientation="portrait"/>
+  <dependencies>
+    <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+    <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+    <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+  </dependencies>
+  <objects>
+    <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+    <placeholder placeholderIdentifier="IBFirstResponder" id="-2" userLabel="First Responder"/>
+    <view contentMode="scaleToFill" id="iN0-l3-epB">
+      <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+      <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+      <subviews>
+        <label opaque="NO" clipsSubviews="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alps SDK" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lxl-9M-O2s">
+          <rect key="frame" x="0.0" y="313" width="375" height="41"/>
+          <fontDescription key="fontDescription" type="system" pointSize="34"/>
+          <nil key="textColor"/>
+          <nil key="highlightedColor"/>
+        </label>
+      </subviews>
+      <viewLayoutGuide key="safeArea" id="Bcu-3y-fBC"/>
+      <constraints>
+        <constraint firstItem="Lxl-9M-O2s" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="vKi-Ql-vhT"/>
+        <constraint firstItem="Lxl-9M-O2s" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="x7J-D9-qEq"/>
+      </constraints>
+      <nil key="simulatedStatusBarMetrics"/>
+      <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+      <point key="canvasLocation" x="548" y="455"/>
+    </view>
+  </objects>
+</document>

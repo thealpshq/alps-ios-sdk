@@ -2,12 +2,25 @@
   ios-sdk-build:
     name: Alps iOS SDK Build
     instance_type: mac_mini_m2
-    max_build_duration: 60
+    max_build_duration: 120
     environment:
       xcode: latest
     scripts:
-      - name: Build iOS SDK
+      - name: Generate Xcode Project
         script: |
-          xcodebuild build -scheme AlpsSDK -configuration Release -destination generic/platform=iOS
+          swift package generate-xcodeproj
+      - name: Build Example App Archive
+        script: |
+          xcodebuild archive \
+            -project AlpsSDK.xcodeproj \
+            -scheme AlpsSDKExample \
+            -configuration Release \
+            -archivePath build/Alps.xcarchive
+      - name: Export IPA
+        script: |
+          xcodebuild -exportArchive \
+            -archivePath build/Alps.xcarchive \
+            -exportOptionsPlist Example/ExportOptions.plist \
+            -exportPath build/ipa
     artifacts:
-      - .build/release/**/*.xcframework
+      - build/ipa/**/*.ipa

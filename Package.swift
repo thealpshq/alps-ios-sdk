@@ -23,6 +23,11 @@ let package = Package(
         .product(name: "PusherSwift", package: "pusher-websocket-swift")
       ],
       path: "Sources/AlpsSDK"
+    ),
+    .executableTarget(
+      name: "AlpsSDKExample",
+      dependencies: ["AlpsSDK"],
+      path: "Example/AlpsSDKExample"
     )
   ]
 )

@@ -220,7 +220,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
       }
     }
 
-    pusherClient?.onConversationStatusChanged = { [weak self] status in
+    pusherClient?.onConversationStatusChanged = { status in
       print("[ThreadVC] Conversation status changed: \(status)")
     }
 
