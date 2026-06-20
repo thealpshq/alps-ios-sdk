@@ -1,0 +1,27 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+		1A1234561A123456A1A1A1A1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsSDKExample/AppDelegate.swift; sourceTree = "<group>"; };
+		1A1234571A123456A1A1A1A1 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsSDKExample/main.swift; sourceTree = "<group>"; };
+		1A1234581A123456A1A1A1A1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsSDKExample/ViewController.swift; sourceTree = "<group>"; };
+		1A1234591A123456A1A1A1A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AlpsSDKExample/Info.plist; sourceTree = "<group>"; };
+		1A1234601A123456A1A1A1A1 /* LaunchScreen.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlpsSDKExample/LaunchScreen.xib; sourceTree = "<group>"; };
+		1A1234701A123456A1A1A1A1 /* Products */ = {isa = PBXGroup; children = (1A1234801A123456A1A1A1A1); name = Products; sourceTree = "<group>"; };
+		1A1234801A123456A1A1A1A1 /* AlpsSDKExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlpsSDKExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A1234901A123456A1A1A1A1 /* AlpsSDKExample */ = {isa = PBXNativeTarget; buildConfigurationList = 1A1234A01A123456A1A1A1A1; buildPhases = (1A1234951A123456A1A1A1A1, 1A1234981A123456A1A1A1A1); buildRules = (); dependencies = (); name = AlpsSDKExample; productName = AlpsSDKExample; productReference = 1A1234801A123456A1A1A1A1; productType = "com.apple.product-type.application"; };
+		1A1234951A123456A1A1A1A1 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (1A1234561A123456A1A1A1A1, 1A1234571A123456A1A1A1A1, 1A1234581A123456A1A1A1A1); runOnlyForDeploymentPostprocessing = 0; };
+		1A1234981A123456A1A1A1A1 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (1A1234591A123456A1A1A1A1, 1A1234601A123456A1A1A1A1); runOnlyForDeploymentPostprocessing = 0; };
+		1A1234A01A123456A1A1A1A1 /* Build configuration list */ = {isa = XCConfigurationList; buildConfigurations = (1A1234A11A123456A1A1A1A1, 1A1234A21A123456A1A1A1A1); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		1A1234A11A123456A1A1A1A1 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {BUNDLE_IDENTIFIER = com.tryalps.sdk.example; CODE_SIGN_IDENTITY = ""; CODE_SIGNING_REQUIRED = NO; IPHONEOS_DEPLOYMENT_TARGET = 15.0; SDKROOT = iphoneos; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Debug; };
+		1A1234A21A123456A1A1A1A1 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {BUNDLE_IDENTIFIER = com.tryalps.sdk.example; CODE_SIGN_IDENTITY = ""; CODE_SIGNING_REQUIRED = NO; IPHONEOS_DEPLOYMENT_TARGET = 15.0; SDKROOT = iphoneos; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Release; };
+		1A1234501A123456A1A1A1A1 /* Project object */ = {isa = PBXProject; attributes = {}; buildConfigurationList = 1A1234530A123456A1A1A1A1; compatibilityVersion = "Xcode 13.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en); mainGroup = 1A1234510A123456A1A1A1A1; productRefGroup = 1A1234701A123456A1A1A1A1; projectDirPath = ""; projectRoot = ""; targets = (1A1234901A123456A1A1A1A1); };
+		1A1234510A123456A1A1A1A1 /* Root group */ = {isa = PBXGroup; children = (1A1234561A123456A1A1A1A1, 1A1234571A123456A1A1A1A1, 1A1234581A123456A1A1A1A1, 1A1234591A123456A1A1A1A1, 1A1234601A123456A1A1A1A1, 1A1234701A123456A1A1A1A1); sourceTree = SOURCE_ROOT; };
+		1A1234531A123456A1A1A1A1 /* Build configuration list */ = {isa = XCConfigurationList; buildConfigurations = (1A1234541A123456A1A1A1A1); defaultConfigurationIsVisible = 0; };
+		1A1234541A123456A1A1A1A1 /* Default */ = {isa = XCBuildConfiguration; buildSettings = {}; name = Default; };
+	};
+	rootObject = 1A1234501A123456A1A1A1A1;
+}

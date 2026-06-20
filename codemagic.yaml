@@ -6,16 +6,14 @@
     environment:
       xcode: latest
     scripts:
-      - name: Generate Xcode Project
-        script: |
-          swift package generate-xcodeproj
-      - name: Build Example App Archive
+      - name: Build and Archive Example App
         script: |
           xcodebuild archive \
-            -project AlpsSDK.xcodeproj \
+            -project Example/AlpsSDKExample.xcodeproj \
             -scheme AlpsSDKExample \
             -configuration Release \
-            -archivePath build/Alps.xcarchive
+            -archivePath build/Alps.xcarchive \
+            -destination generic/platform=iOS
       - name: Export IPA
         script: |
           xcodebuild -exportArchive \
