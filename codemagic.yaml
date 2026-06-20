@@ -8,20 +8,20 @@
     scripts:
       - name: Build for iOS Device
         script: |
-          xcodebuild build-for-distribution \
+          xcodebuild archive \
             -scheme AlpsSDK \
             -configuration Release \
             -destination generic/platform=iOS \
-            -derivedDataPath .build \
-            -archivePath build/AlpsSDK-iOS.xcarchive
+            -archivePath build/AlpsSDK-iOS.xcarchive \
+            -derivedDataPath .build
       - name: Build for iOS Simulator
         script: |
-          xcodebuild build-for-distribution \
+          xcodebuild archive \
             -scheme AlpsSDK \
             -configuration Release \
-            -destination generic/platform=iOS\ Simulator \
-            -derivedDataPath .build \
-            -archivePath build/AlpsSDK-Simulator.xcarchive
+            -destination "generic/platform=iOS Simulator" \
+            -archivePath build/AlpsSDK-Simulator.xcarchive \
+            -derivedDataPath .build
       - name: Create XCFramework
         script: |
           xcodebuild -create-xcframework \
