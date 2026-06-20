@@ -12,20 +12,20 @@
       - name: Generate Xcode Project
         script: |
           xcodegen generate
-      - name: Build Test App Archive
+      - name: Build Test App for Simulator
         script: |
-          xcodebuild archive \
+          xcodebuild build \
             -scheme AlpsSDKExample \
             -configuration Release \
-            -destination generic/platform=iOS \
-            -archivePath build-output/AlpsSDKExample.xcarchive
-      - name: Create IPA
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build-output
+      - name: Create App Bundle for Simulator
         script: |
           mkdir -p build-output/Payload
-          cp -r build-output/AlpsSDKExample.xcarchive/Products/Applications/AlpsSDKExample.app build-output/Payload/
+          cp -r "build-output/Build/Products/Release-iphonesimulator/AlpsSDKExample.app" build-output/Payload/
           cd build-output
-          zip -r AlpsSDKExample.ipa Payload/
-          mkdir -p ipa
-          mv AlpsSDKExample.ipa ipa/
+          zip -r AlpsSDKExample.zip Payload/
+          mkdir -p simulator-app
+          mv AlpsSDKExample.zip simulator-app/
     artifacts:
-      - build-output/ipa/**/*.ipa
+      - build-output/simulator-app/**/*.zip
