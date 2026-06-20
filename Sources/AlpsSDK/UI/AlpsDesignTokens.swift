@@ -34,7 +34,7 @@ struct AlpsDesignTokens {
 
 extension UIColor {
   convenience init(hex: String) {
-    var hexString = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+    let hexString = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
     if hexString.count == 6 {
       let scanner = Scanner(string: hexString)
       var rgb: UInt64 = 0

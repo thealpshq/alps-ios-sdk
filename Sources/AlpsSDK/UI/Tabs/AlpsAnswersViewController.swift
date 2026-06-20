@@ -208,7 +208,7 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
 
   func updateWidgetData(_ data: WidgetDataResponse) {
     widgetData = data
-    allArticles = (data.articles ?? [])
+    allArticles = (data.categories ?? []).flatMap { $0.articles }
     loadFeaturedArticles()
   }
 }
