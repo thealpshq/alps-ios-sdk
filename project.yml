@@ -15,11 +15,16 @@ targets:
     deploymentTarget: "15.0"
     sources:
       - path: Sources/AlpsSDK
+        excludes:
+          - Info.plist
+    resources:
+      - path: Sources/AlpsSDK/Info.plist
     dependencies:
       - package: PusherSwift
     settings:
       BUNDLE_IDENTIFIER: com.tryalps.sdk
       IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+      INFOPLIST_FILE: Sources/AlpsSDK/Info.plist
 
   AlpsSDKExample:
     type: application
