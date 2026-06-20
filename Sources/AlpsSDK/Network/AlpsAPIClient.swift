@@ -72,27 +72,42 @@ class AlpsAPIClient {
     completion: @escaping (Result<T, Error>) -> Void
   ) {
     guard let request = endpoint.makeRequest() else {
+      print("[AlpsAPIClient] Invalid request: \(endpoint)")
       completion(.failure(AppError.invalidRequest))
       return
     }
 
+    print("[AlpsAPIClient] Fetching: \(request.url?.absoluteString ?? "unknown")")
+
     session.dataTask(with: request) { data, response, error in
+      if let httpResponse = response as? HTTPURLResponse {
+        print("[AlpsAPIClient] Status: \(httpResponse.statusCode)")
+      }
+
       if let error = error {
+        print("[AlpsAPIClient] Network error: \(error)")
         completion(.failure(error))
         return
       }
 
       guard let data = data else {
+        print("[AlpsAPIClient] No data received")
         completion(.failure(AppError.noData))
         return
+      }
+
+      if let jsonString = String(data: data, encoding: .utf8) {
+        print("[AlpsAPIClient] Response: \(jsonString.prefix(500))")
       }
 
       do {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let decoded = try decoder.decode(T.self, from: data)
+        print("[AlpsAPIClient] Decoded successfully")
         completion(.success(decoded))
       } catch {
+        print("[AlpsAPIClient] Decoding error: \(error)")
         completion(.failure(error))
       }
     }.resume()
