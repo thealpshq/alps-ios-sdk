@@ -76,15 +76,21 @@ class AlpsWindowManager {
   }
 
   private func fetchWidgetData() {
+    print("[AlpsWindowManager] Fetching widget data for key: \(config.widgetKey)")
     apiClient.fetchWidgetData { [weak self] result in
       switch result {
       case .success(let data):
+        print("[AlpsWindowManager] Widget data fetched successfully")
+        print("[AlpsWindowManager] Welcome message: \(data.welcomeMessage ?? "nil")")
+        print("[AlpsWindowManager] Team name: \(data.teamName ?? "nil")")
         self?.widgetData = data
         self?.config.pusherKey = data.pusherKey
         self?.config.pusherCluster = data.pusherCluster
         self?.updateLauncherStyle(data)
+        self?.panelViewController?.updateWidgetData(data)
       case .failure(let error):
         print("[AlpsWindowManager] Failed to fetch widget data: \(error)")
+        print("[AlpsWindowManager] Error details: \(String(describing: error))")
       }
     }
   }

@@ -251,6 +251,12 @@ class AlpsPanelViewController: UIViewController {
     config.visitorEmail = email
   }
 
+  func updateWidgetData(_ data: WidgetDataResponse) {
+    widgetData = data
+    homeViewController?.updateWidgetData(data)
+    answersViewController?.updateWidgetData(data)
+  }
+
   private func restoreVisitorIfNeeded() {
     if let stored = AlpsVisitorStore.load(widgetKey: config.widgetKey) {
       if config.visitorName == nil {

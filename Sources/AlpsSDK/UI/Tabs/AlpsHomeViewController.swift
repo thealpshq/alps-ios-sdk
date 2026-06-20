@@ -118,4 +118,10 @@ class AlpsHomeViewController: UIViewController {
       panelVC.switchTab(to: .messages)
     }
   }
+
+  func updateWidgetData(_ data: WidgetDataResponse) {
+    widgetData = data
+    stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    populateContent()
+  }
 }

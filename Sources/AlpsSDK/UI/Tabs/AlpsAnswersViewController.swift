@@ -205,4 +205,10 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
       nav.pushViewController(articleVC, animated: true)
     }
   }
+
+  func updateWidgetData(_ data: WidgetDataResponse) {
+    widgetData = data
+    allArticles = (data.articles ?? [])
+    loadFeaturedArticles()
+  }
 }
