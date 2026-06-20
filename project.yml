@@ -10,44 +10,19 @@ targets:
     deploymentTarget: "15.0"
     sources:
       - path: Example/AlpsSDKExample
-        includes:
-          - "*.swift"
     resources:
-      - path: Example/AlpsSDKExample/LaunchScreen.xib
-      - path: Example/AlpsSDKExample/Info.plist
-    dependencies:
-      - target: AlpsSDK
+      - path: Example/AlpsSDKExample
     settings:
       BUNDLE_IDENTIFIER: com.tryalps.sdk.example
       CODE_SIGN_IDENTITY: ""
-      CODE_SIGNING_REQUIRED: NO
+      CODE_SIGNING_REQUIRED: "NO"
       CODE_SIGN_STYLE: Automatic
       IPHONEOS_DEPLOYMENT_TARGET: "15.0"
-      PRODUCT_BUNDLE_IDENTIFIER: com.tryalps.sdk.example
-
-  AlpsSDK:
-    type: framework
-    platform: iOS
-    deploymentTarget: "15.0"
-    sources:
-      - path: Sources/AlpsSDK
-    dependencies:
-      - package: PusherSwift
-    settings:
-      BUNDLE_IDENTIFIER: com.tryalps.sdk
-      IPHONEOS_DEPLOYMENT_TARGET: "15.0"
-
-packages:
-  PusherSwift:
-    url: https://github.com/pusher/pusher-websocket-swift
-    from: 10.1.5
 
 schemes:
   AlpsSDKExample:
     build:
       targets:
-        - AlpsSDKExample
-    run:
-      config: Debug
+        AlpsSDKExample: all
     archive:
       config: Release
