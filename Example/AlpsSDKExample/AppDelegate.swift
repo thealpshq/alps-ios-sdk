@@ -10,7 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   ) -> Bool {
     // Initialize Alps SDK
     Alps.configure(
-      widgetKey: "test_widget_key",
+      widgetKey: "c7594f8642f7",
       userName: nil,
       userEmail: nil
     )
