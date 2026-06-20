@@ -9,11 +9,11 @@
       - name: Build Test App Archive
         script: |
           xcodebuild archive \
+            -project Example/AlpsSDKExample.xcodeproj \
             -scheme AlpsSDKExample \
             -configuration Release \
             -destination generic/platform=iOS \
-            -archivePath build-output/AlpsSDKExample.xcarchive \
-            -derivedDataPath build-output/derived
+            -archivePath build-output/AlpsSDKExample.xcarchive
       - name: Export IPA
         script: |
           xcodebuild -exportArchive \
