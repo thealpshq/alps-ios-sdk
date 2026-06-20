@@ -8,6 +8,7 @@ class AlpsHomeViewController: UIViewController {
   private let scrollView = UIScrollView()
   private let stackView = UIStackView()
   private let startButton = UIButton(type: .system)
+  private let debugLabel = UILabel()
 
   init(
     config: AlpsConfig,
@@ -29,6 +30,11 @@ class AlpsHomeViewController: UIViewController {
     view.backgroundColor = .white
     setupUI()
     populateContent()
+
+    if widgetData == nil {
+      debugLabel.text = "⏳ Loading widget data..."
+      debugLabel.textColor = .systemOrange
+    }
   }
 
   private func setupUI() {
@@ -55,6 +61,12 @@ class AlpsHomeViewController: UIViewController {
       stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
       stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32),
     ])
+
+    debugLabel.numberOfLines = 0
+    debugLabel.font = UIFont.systemFont(ofSize: 11)
+    debugLabel.textColor = .systemGray
+    debugLabel.isHidden = true
+    stackView.addArrangedSubview(debugLabel)
   }
 
   private func populateContent() {
@@ -121,7 +133,16 @@ class AlpsHomeViewController: UIViewController {
 
   func updateWidgetData(_ data: WidgetDataResponse) {
     widgetData = data
+    debugLabel.isHidden = false
+    debugLabel.text = "✓ Data loaded: \(data.categories.count) categories"
+    debugLabel.textColor = .systemGreen
     stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     populateContent()
+  }
+
+  func showError(_ error: String) {
+    debugLabel.isHidden = false
+    debugLabel.text = "❌ Failed to load: \(error)"
+    debugLabel.textColor = .systemRed
   }
 }

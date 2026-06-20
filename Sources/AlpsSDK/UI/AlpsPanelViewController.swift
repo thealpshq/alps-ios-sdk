@@ -14,6 +14,7 @@ class AlpsPanelViewController: UIViewController {
   private var homeViewController: AlpsHomeViewController?
   private var messagesViewController: AlpsMessagesViewController?
   private var answersViewController: AlpsAnswersViewController?
+  private var fetchError: String?
 
   enum Tab {
     case home, messages, answers
@@ -253,8 +254,14 @@ class AlpsPanelViewController: UIViewController {
 
   func updateWidgetData(_ data: WidgetDataResponse) {
     widgetData = data
+    fetchError = nil
     homeViewController?.updateWidgetData(data)
     answersViewController?.updateWidgetData(data)
+  }
+
+  func showError(_ error: String) {
+    fetchError = error
+    homeViewController?.showError(error)
   }
 
   private func restoreVisitorIfNeeded() {
