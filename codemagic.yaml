@@ -5,22 +5,9 @@
     max_build_duration: 60
     environment:
       xcode: 15.4
-      variables:
-        FASTLANE_USER: $FASTLANE_USER
-        FASTLANE_PASSWORD: $FASTLANE_PASSWORD
     scripts:
-      - name: Setup
-        script: |
-          ls -la
       - name: Build iOS SDK
         script: |
           swift build -c release
-      - name: Run Tests
-        script: |
-          echo "Tests placeholder"
     artifacts:
       - .build/release/**
-    publishing:
-      github_releases:
-        release: true
-        prerelease: false
