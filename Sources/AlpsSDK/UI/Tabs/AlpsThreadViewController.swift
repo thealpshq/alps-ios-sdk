@@ -322,7 +322,6 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
   func textViewDidChange(_ textView: UITextView) {
     let size = textView.sizeThatFits(CGSize(width: textView.bounds.width, height: CGFloat.greatestFiniteMagnitude))
     let maxHeight: CGFloat = 96
-    let newHeight = min(size.height, maxHeight)
     textView.isScrollEnabled = size.height > maxHeight
   }
 

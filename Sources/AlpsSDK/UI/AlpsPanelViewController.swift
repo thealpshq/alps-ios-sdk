@@ -137,11 +137,21 @@ class AlpsPanelViewController: UIViewController {
     contentView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(contentView)
 
+    let topBorder = UIView()
+    topBorder.backgroundColor = AlpsDesignTokens.border
+    topBorder.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(topBorder)
+
     bottomTabBar.backgroundColor = .white
-    bottomTabBar.layer.borderTopWidth = 1
-    bottomTabBar.layer.borderTopColor = AlpsDesignTokens.border.cgColor
     bottomTabBar.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(bottomTabBar)
+
+    NSLayoutConstraint.activate([
+      topBorder.heightAnchor.constraint(equalToConstant: 1),
+      topBorder.leftAnchor.constraint(equalTo: view.leftAnchor),
+      topBorder.rightAnchor.constraint(equalTo: view.rightAnchor),
+      topBorder.bottomAnchor.constraint(equalTo: bottomTabBar.topAnchor),
+    ])
 
     NSLayoutConstraint.activate([
       contentView.topAnchor.constraint(equalTo: header.bottomAnchor),
