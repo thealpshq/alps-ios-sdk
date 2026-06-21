@@ -10,6 +10,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
   private let messageInput = UITextView()
   private let sendButton = UIButton(type: .system)
   private let emojiButton = UIButton(type: .system)
+  private let attachmentButton = UIButton(type: .system)
   private var nameField: UITextField?
   private var emailField: UITextField?
   private var messages: [Message] = []
@@ -104,12 +105,20 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
     emojiButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
     inputContainer.addSubview(emojiButton)
 
+    attachmentButton.translatesAutoresizingMaskIntoConstraints = false
+    let attachConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
+    let attachImage = UIImage(systemName: "paperclip", withConfiguration: attachConfig)
+    attachmentButton.setImage(attachImage, for: .normal)
+    attachmentButton.tintColor = AlpsDesignTokens.textBody
+    attachmentButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+    inputContainer.addSubview(attachmentButton)
+
     sendButton.translatesAutoresizingMaskIntoConstraints = false
     let sendConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
     let sendImage = UIImage(systemName: "arrow.up", withConfiguration: sendConfig)
     sendButton.setImage(sendImage, for: .normal)
     sendButton.tintColor = .white
-    sendButton.backgroundColor = AlpsDesignTokens.dark
+    sendButton.backgroundColor = AlpsDesignTokens.accent
     sendButton.layer.cornerRadius = 16
     sendButton.clipsToBounds = true
     sendButton.widthAnchor.constraint(equalToConstant: 32).isActive = true
@@ -136,7 +145,10 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
       emojiButton.leftAnchor.constraint(equalTo: messageInput.rightAnchor, constant: 8),
       emojiButton.centerYAnchor.constraint(equalTo: messageInput.centerYAnchor),
 
-      sendButton.leftAnchor.constraint(equalTo: emojiButton.rightAnchor, constant: 8),
+      attachmentButton.leftAnchor.constraint(equalTo: emojiButton.rightAnchor, constant: 8),
+      attachmentButton.centerYAnchor.constraint(equalTo: messageInput.centerYAnchor),
+
+      sendButton.leftAnchor.constraint(equalTo: attachmentButton.rightAnchor, constant: 8),
       sendButton.centerYAnchor.constraint(equalTo: messageInput.centerYAnchor),
       sendButton.rightAnchor.constraint(equalTo: inputContainer.rightAnchor, constant: -12),
     ])
@@ -187,7 +199,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
 
     let submitButton = UIButton(type: .system)
     submitButton.setTitle("Continue", for: .normal)
-    submitButton.backgroundColor = AlpsDesignTokens.dark
+    submitButton.backgroundColor = AlpsDesignTokens.accent
     submitButton.setTitleColor(.white, for: .normal)
     submitButton.layer.cornerRadius = 8
     submitButton.translatesAutoresizingMaskIntoConstraints = false
@@ -337,7 +349,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
       bubbleView.backgroundColor = AlpsDesignTokens.searchBg
       bubbleView.layer.cornerRadius = 16
     } else {
-      bubbleView.backgroundColor = AlpsDesignTokens.dark
+      bubbleView.backgroundColor = AlpsDesignTokens.accent
       bubbleView.layer.cornerRadius = 8
     }
 

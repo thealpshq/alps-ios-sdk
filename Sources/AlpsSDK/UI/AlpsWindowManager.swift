@@ -85,6 +85,9 @@ class AlpsWindowManager {
           print("[AlpsWindowManager] Welcome message: \(data.welcomeMessage ?? "nil")")
           print("[AlpsWindowManager] Team name: \(data.teamName ?? "nil")")
           print("[AlpsWindowManager] Categories: \(data.categories.count)")
+          if let widgetColor = data.widgetColor {
+            AlpsDesignTokens.accent = UIColor(hex: widgetColor)
+          }
           self?.widgetData = data
           self?.config.pusherKey = data.pusherKey
           self?.config.pusherCluster = data.pusherCluster

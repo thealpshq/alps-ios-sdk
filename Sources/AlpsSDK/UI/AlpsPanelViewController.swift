@@ -5,11 +5,11 @@ class AlpsPanelViewController: UIViewController {
   let apiClient: AlpsAPIClient
   var widgetData: WidgetDataResponse?
 
-  private let tabBar = UIView()
+  private let header = UIView()
+  private let bottomTabBar = UIView()
   private let homeButton = UIButton(type: .system)
   private let messagesButton = UIButton(type: .system)
   private let answersButton = UIButton(type: .system)
-  private let tabUnderline = UIView()
   private let contentView = UIView()
   private var currentTab: Tab = .home
   private var homeViewController: AlpsHomeViewController?
@@ -46,7 +46,6 @@ class AlpsPanelViewController: UIViewController {
   }
 
   private func setupUI() {
-    let header = UIView()
     header.backgroundColor = AlpsDesignTokens.dark
     header.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(header)
@@ -55,7 +54,7 @@ class AlpsPanelViewController: UIViewController {
       header.topAnchor.constraint(equalTo: view.topAnchor),
       header.leftAnchor.constraint(equalTo: view.leftAnchor),
       header.rightAnchor.constraint(equalTo: view.rightAnchor),
-      header.heightAnchor.constraint(equalToConstant: 56),
+      header.heightAnchor.constraint(equalToConstant: 80),
     ])
 
     let headerStack = UIStackView()
@@ -70,98 +69,146 @@ class AlpsPanelViewController: UIViewController {
       headerStack.centerYAnchor.constraint(equalTo: header.centerYAnchor),
     ])
 
-    let avatar = UIView()
-    avatar.backgroundColor = AlpsDesignTokens.avatarBg
+    let logoContainer = UIView()
+    logoContainer.translatesAutoresizingMaskIntoConstraints = false
+    logoContainer.widthAnchor.constraint(equalToConstant: 42).isActive = true
+    logoContainer.heightAnchor.constraint(equalToConstant: 42).isActive = true
+    headerStack.addArrangedSubview(logoContainer)
+
+    let avatar = UIImageView()
+    avatar.contentMode = .scaleAspectFill
     avatar.layer.cornerRadius = 21
     avatar.clipsToBounds = true
+    avatar.backgroundColor = AlpsDesignTokens.avatarBg
     avatar.translatesAutoresizingMaskIntoConstraints = false
-    avatar.widthAnchor.constraint(equalToConstant: 42).isActive = true
-    avatar.heightAnchor.constraint(equalToConstant: 42).isActive = true
-    headerStack.addArrangedSubview(avatar)
+    logoContainer.addSubview(avatar)
 
-    let initials = UILabel()
+    NSLayoutConstraint.activate([
+      avatar.topAnchor.constraint(equalTo: logoContainer.topAnchor),
+      avatar.leftAnchor.constraint(equalTo: logoContainer.leftAnchor),
+      avatar.rightAnchor.constraint(equalTo: logoContainer.rightAnchor),
+      avatar.bottomAnchor.constraint(equalTo: logoContainer.bottomAnchor),
+    ])
+
+    let initialsLabel = UILabel()
     let teamName = widgetData?.teamName ?? "A"
-    initials.text = String(teamName.prefix(1)).uppercased()
-    initials.textColor = .white
-    initials.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-    initials.textAlignment = .center
-    initials.translatesAutoresizingMaskIntoConstraints = false
-    avatar.addSubview(initials)
+    initialsLabel.text = String(teamName.prefix(1)).uppercased()
+    initialsLabel.textColor = .white
+    initialsLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+    initialsLabel.textAlignment = .center
+    initialsLabel.translatesAutoresizingMaskIntoConstraints = false
+    logoContainer.addSubview(initialsLabel)
 
     NSLayoutConstraint.activate([
-      initials.centerXAnchor.constraint(equalTo: avatar.centerXAnchor),
-      initials.centerYAnchor.constraint(equalTo: avatar.centerYAnchor),
+      initialsLabel.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
+      initialsLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
     ])
 
-    let titleLabel = UILabel()
-    titleLabel.text = widgetData?.teamName ?? "Support"
-    titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-    titleLabel.textColor = .white
-    headerStack.addArrangedSubview(titleLabel)
+    if let logoURL = widgetData?.teamAvatarUrl, let url = URL(string: logoURL) {
+      URLSession.shared.dataTask(with: url) { data, _, _ in
+        DispatchQueue.main.async {
+          if let data = data, let image = UIImage(data: data) {
+            avatar.image = image
+            initialsLabel.isHidden = true
+          }
+        }
+      }.resume()
+    }
 
-    tabBar.backgroundColor = .white
-    tabBar.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(tabBar)
+    let textStack = UIStackView()
+    textStack.axis = .vertical
+    textStack.spacing = 2
+    textStack.alignment = .leading
+    headerStack.addArrangedSubview(textStack)
 
-    NSLayoutConstraint.activate([
-      tabBar.topAnchor.constraint(equalTo: header.bottomAnchor),
-      tabBar.leftAnchor.constraint(equalTo: view.leftAnchor),
-      tabBar.rightAnchor.constraint(equalTo: view.rightAnchor),
-      tabBar.heightAnchor.constraint(equalToConstant: 48),
-    ])
+    let teamLabel = UILabel()
+    teamLabel.text = widgetData?.teamName ?? "Support"
+    teamLabel.font = UIFont.systemFont(ofSize: 11)
+    teamLabel.textColor = AlpsDesignTokens.textLight
+    textStack.addArrangedSubview(teamLabel)
 
-    setupTabButtons()
-
-    tabUnderline.backgroundColor = AlpsDesignTokens.dark
-    tabUnderline.translatesAutoresizingMaskIntoConstraints = false
-    tabBar.addSubview(tabUnderline)
-
-    NSLayoutConstraint.activate([
-      tabUnderline.bottomAnchor.constraint(equalTo: tabBar.bottomAnchor),
-      tabUnderline.heightAnchor.constraint(equalToConstant: 2),
-      tabUnderline.widthAnchor.constraint(equalTo: tabBar.widthAnchor, multiplier: 1.0 / 3.0),
-      tabUnderline.leftAnchor.constraint(equalTo: tabBar.leftAnchor),
-    ])
+    let welcomeLabel = UILabel()
+    welcomeLabel.text = widgetData?.welcomeMessage ?? ""
+    welcomeLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+    welcomeLabel.textColor = .white
+    welcomeLabel.numberOfLines = 0
+    textStack.addArrangedSubview(welcomeLabel)
 
     contentView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(contentView)
 
+    bottomTabBar.backgroundColor = .white
+    bottomTabBar.layer.borderTopWidth = 1
+    bottomTabBar.layer.borderTopColor = AlpsDesignTokens.border.cgColor
+    bottomTabBar.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(bottomTabBar)
+
     NSLayoutConstraint.activate([
-      contentView.topAnchor.constraint(equalTo: tabBar.bottomAnchor),
+      contentView.topAnchor.constraint(equalTo: header.bottomAnchor),
       contentView.leftAnchor.constraint(equalTo: view.leftAnchor),
       contentView.rightAnchor.constraint(equalTo: view.rightAnchor),
-      contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      contentView.bottomAnchor.constraint(equalTo: bottomTabBar.topAnchor),
+
+      bottomTabBar.leftAnchor.constraint(equalTo: view.leftAnchor),
+      bottomTabBar.rightAnchor.constraint(equalTo: view.rightAnchor),
+      bottomTabBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+      bottomTabBar.heightAnchor.constraint(equalToConstant: 50),
     ])
+
+    setupTabButtons()
   }
 
   private func setupTabButtons() {
-    let buttons: [(UIButton, String, Tab)] = [
-      (homeButton, "Home", .home),
-      (messagesButton, "Messages", .messages),
-      (answersButton, "Answers", .answers),
+    let buttons: [(UIButton, String, String)] = [
+      (homeButton, "house.fill", "Home"),
+      (messagesButton, "bubble.left.fill", "Messages"),
+      (answersButton, "magnifyingglass", "Answers"),
     ]
 
     var previousButton: UIButton?
 
-    for (button, title, _) in buttons {
-      button.setTitle(title, for: .normal)
-      button.translatesAutoresizingMaskIntoConstraints = false
-      button.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-      button.setTitleColor(AlpsDesignTokens.textBody, for: .normal)
-      button.addTarget(self, action: #selector(tabTapped(_:)), for: .touchUpInside)
-      button.tag = buttons.firstIndex(where: { $0.0 == button }) ?? 0
-      tabBar.addSubview(button)
+    for (button, iconName, label) in buttons {
+      let stack = UIStackView()
+      stack.axis = .vertical
+      stack.spacing = 2
+      stack.alignment = .center
+      stack.isUserInteractionEnabled = false
+
+      let icon = UIImageView()
+      let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .semibold)
+      icon.image = UIImage(systemName: iconName, withConfiguration: config)
+      icon.contentMode = .scaleAspectFit
+      stack.addArrangedSubview(icon)
+
+      let labelView = UILabel()
+      labelView.text = label
+      labelView.font = UIFont.systemFont(ofSize: 10)
+      labelView.textColor = AlpsDesignTokens.textBody
+      stack.addArrangedSubview(labelView)
+
+      button.addSubview(stack)
+      stack.translatesAutoresizingMaskIntoConstraints = false
 
       NSLayoutConstraint.activate([
-        button.topAnchor.constraint(equalTo: tabBar.topAnchor),
-        button.bottomAnchor.constraint(equalTo: tabBar.bottomAnchor),
-        button.widthAnchor.constraint(equalTo: tabBar.widthAnchor, multiplier: 1.0 / 3.0),
+        stack.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+        stack.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+      ])
+
+      button.translatesAutoresizingMaskIntoConstraints = false
+      button.addTarget(self, action: #selector(tabTapped(_:)), for: .touchUpInside)
+      button.tag = buttons.firstIndex(where: { $0.0 == button }) ?? 0
+      bottomTabBar.addSubview(button)
+
+      NSLayoutConstraint.activate([
+        button.topAnchor.constraint(equalTo: bottomTabBar.topAnchor),
+        button.bottomAnchor.constraint(equalTo: bottomTabBar.bottomAnchor),
+        button.widthAnchor.constraint(equalTo: bottomTabBar.widthAnchor, multiplier: 1.0 / 3.0),
       ])
 
       if let previous = previousButton {
         button.leftAnchor.constraint(equalTo: previous.rightAnchor).isActive = true
       } else {
-        button.leftAnchor.constraint(equalTo: tabBar.leftAnchor).isActive = true
+        button.leftAnchor.constraint(equalTo: bottomTabBar.leftAnchor).isActive = true
       }
 
       previousButton = button
@@ -193,28 +240,29 @@ class AlpsPanelViewController: UIViewController {
 
   private func updateTabButtonStates() {
     [homeButton, messagesButton, answersButton].forEach { btn in
-      btn.setTitleColor(AlpsDesignTokens.textBody, for: .normal)
+      if let stack = btn.subviews.first as? UIStackView,
+         let icon = stack.arrangedSubviews.first as? UIImageView,
+         let label = stack.arrangedSubviews.last as? UILabel {
+        label.textColor = AlpsDesignTokens.textBody
+        icon.tintColor = AlpsDesignTokens.textBody
+      }
     }
 
     let activeButton: UIButton
-    let tabIndex: CGFloat
     switch currentTab {
     case .home:
       activeButton = homeButton
-      tabIndex = 0
     case .messages:
       activeButton = messagesButton
-      tabIndex = 1
     case .answers:
       activeButton = answersButton
-      tabIndex = 2
     }
 
-    activeButton.setTitleColor(AlpsDesignTokens.dark, for: .normal)
-
-    UIView.animate(withDuration: 0.2) {
-      let newX = tabIndex * (self.tabBar.bounds.width / 3.0)
-      self.tabUnderline.frame.origin.x = newX
+    if let stack = activeButton.subviews.first as? UIStackView,
+       let icon = stack.arrangedSubviews.first as? UIImageView,
+       let label = stack.arrangedSubviews.last as? UILabel {
+      label.textColor = AlpsDesignTokens.accent
+      icon.tintColor = AlpsDesignTokens.accent
     }
   }
 
@@ -223,7 +271,8 @@ class AlpsPanelViewController: UIViewController {
       homeViewController = AlpsHomeViewController(
         config: config,
         apiClient: apiClient,
-        widgetData: widgetData
+        widgetData: widgetData,
+        panelViewController: self
       )
     }
 

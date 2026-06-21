@@ -52,7 +52,7 @@ class AlpsMessagesViewController: UIViewController, UITableViewDataSource, UITab
     view.addSubview(emptyStateLabel)
 
     startButton.setTitle("Send us a message", for: .normal)
-    startButton.backgroundColor = AlpsDesignTokens.dark
+    startButton.backgroundColor = AlpsDesignTokens.accent
     startButton.setTitleColor(.white, for: .normal)
     startButton.layer.cornerRadius = 24
     startButton.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .semibold)

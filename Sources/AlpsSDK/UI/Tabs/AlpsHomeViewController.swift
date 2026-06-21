@@ -4,6 +4,7 @@ class AlpsHomeViewController: UIViewController {
   let config: AlpsConfig
   let apiClient: AlpsAPIClient
   var widgetData: WidgetDataResponse?
+  weak var panelViewController: AlpsPanelViewController?
 
   private let scrollView = UIScrollView()
   private let stackView = UIStackView()
@@ -12,11 +13,13 @@ class AlpsHomeViewController: UIViewController {
   init(
     config: AlpsConfig,
     apiClient: AlpsAPIClient,
-    widgetData: WidgetDataResponse?
+    widgetData: WidgetDataResponse?,
+    panelViewController: AlpsPanelViewController? = nil
   ) {
     self.config = config
     self.apiClient = apiClient
     self.widgetData = widgetData
+    self.panelViewController = panelViewController
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -79,57 +82,87 @@ class AlpsHomeViewController: UIViewController {
     headerCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
     stackView.addArrangedSubview(headerCard)
 
-    let headerStack = UIStackView()
-    headerStack.axis = .vertical
-    headerStack.spacing = 12
-    headerStack.alignment = .leading
-    headerStack.translatesAutoresizingMaskIntoConstraints = false
-    headerCard.addSubview(headerStack)
+    let headerHStack = UIStackView()
+    headerHStack.axis = .horizontal
+    headerHStack.spacing = 16
+    headerHStack.alignment = .top
+    headerHStack.translatesAutoresizingMaskIntoConstraints = false
+    headerCard.addSubview(headerHStack)
 
     NSLayoutConstraint.activate([
-      headerStack.topAnchor.constraint(equalTo: headerCard.topAnchor, constant: 16),
-      headerStack.leftAnchor.constraint(equalTo: headerCard.leftAnchor, constant: 16),
-      headerStack.rightAnchor.constraint(equalTo: headerCard.rightAnchor, constant: -16),
-      headerStack.bottomAnchor.constraint(equalTo: headerCard.bottomAnchor, constant: -16),
+      headerHStack.topAnchor.constraint(equalTo: headerCard.topAnchor, constant: 16),
+      headerHStack.leftAnchor.constraint(equalTo: headerCard.leftAnchor, constant: 16),
+      headerHStack.rightAnchor.constraint(equalTo: headerCard.rightAnchor, constant: -16),
+      headerHStack.bottomAnchor.constraint(equalTo: headerCard.bottomAnchor, constant: -16),
     ])
 
-    if let message = data.welcomeMessage {
-      let label = UILabel()
-      label.text = message
-      label.numberOfLines = 0
-      label.font = UIFont.systemFont(ofSize: 14)
-      label.textColor = .white
-      headerStack.addArrangedSubview(label)
-    }
+    let welcomeLabel = UILabel()
+    welcomeLabel.text = data.welcomeMessage ?? ""
+    welcomeLabel.numberOfLines = 0
+    welcomeLabel.font = UIFont.systemFont(ofSize: 14)
+    welcomeLabel.textColor = .white
+    headerHStack.addArrangedSubview(welcomeLabel)
 
-    if let agents = data.onlineAgents, !agents.isEmpty {
-      let agentsLabel = UILabel()
-      agentsLabel.text = "Available Agents"
-      agentsLabel.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
-      agentsLabel.textColor = AlpsDesignTokens.textLight
-      headerStack.addArrangedSubview(agentsLabel)
+    let spacer = UIView()
+    headerHStack.addArrangedSubview(spacer)
 
-      for agent in agents {
-        let agentView = UIView()
-        agentView.backgroundColor = UIColor.white.withAlphaComponent(0.1)
-        agentView.layer.cornerRadius = AlpsDesignTokens.radiusCard
-        agentView.translatesAutoresizingMaskIntoConstraints = false
-        agentView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    let avatarContainer = UIView()
+    avatarContainer.translatesAutoresizingMaskIntoConstraints = false
+    avatarContainer.widthAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
+    headerHStack.addArrangedSubview(avatarContainer)
 
-        let nameLabel = UILabel()
-        let fullName = "\(agent.firstName ?? "") \(agent.lastName ?? "")".trimmingCharacters(in: .whitespaces)
-        nameLabel.text = fullName
-        nameLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-        nameLabel.textColor = .white
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        agentView.addSubview(nameLabel)
+    let agents = data.onlineAgents ?? []
+    let displayAgents = Array(agents.prefix(3))
 
-        NSLayoutConstraint.activate([
-          nameLabel.leftAnchor.constraint(equalTo: agentView.leftAnchor, constant: 12),
-          nameLabel.centerYAnchor.constraint(equalTo: agentView.centerYAnchor),
-        ])
+    for (index, agent) in displayAgents.enumerated() {
+      let avatar = UIView()
+      avatar.backgroundColor = AlpsDesignTokens.avatarBg
+      avatar.layer.cornerRadius = 14
+      avatar.clipsToBounds = true
+      avatar.translatesAutoresizingMaskIntoConstraints = false
+      avatar.widthAnchor.constraint(equalToConstant: 28).isActive = true
+      avatar.heightAnchor.constraint(equalToConstant: 28).isActive = true
+      avatarContainer.addSubview(avatar)
 
-        headerStack.addArrangedSubview(agentView)
+      let initial = UILabel()
+      let firstName = agent.firstName ?? "A"
+      initial.text = String(firstName.prefix(1)).uppercased()
+      initial.textColor = .white
+      initial.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+      initial.textAlignment = .center
+      initial.translatesAutoresizingMaskIntoConstraints = false
+      avatar.addSubview(initial)
+
+      NSLayoutConstraint.activate([
+        initial.centerXAnchor.constraint(equalTo: avatar.centerXAnchor),
+        initial.centerYAnchor.constraint(equalTo: avatar.centerYAnchor),
+      ])
+
+      let xOffset = CGFloat(index) * -8
+      NSLayoutConstraint.activate([
+        avatar.leftAnchor.constraint(equalTo: avatarContainer.leftAnchor, constant: xOffset),
+        avatar.topAnchor.constraint(equalTo: avatarContainer.topAnchor),
+      ])
+
+      if let profileURL = agent.profilePicture, let url = URL(string: profileURL) {
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+          DispatchQueue.main.async {
+            if let data = data, let image = UIImage(data: data) {
+              let imageView = UIImageView(image: image)
+              imageView.contentMode = .scaleAspectFill
+              imageView.clipsToBounds = true
+              imageView.translatesAutoresizingMaskIntoConstraints = false
+              avatar.addSubview(imageView)
+              NSLayoutConstraint.activate([
+                imageView.topAnchor.constraint(equalTo: avatar.topAnchor),
+                imageView.leftAnchor.constraint(equalTo: avatar.leftAnchor),
+                imageView.rightAnchor.constraint(equalTo: avatar.rightAnchor),
+                imageView.bottomAnchor.constraint(equalTo: avatar.bottomAnchor),
+              ])
+              initial.isHidden = true
+            }
+          }
+        }.resume()
       }
     }
 
@@ -140,37 +173,75 @@ class AlpsHomeViewController: UIViewController {
     actionCard.layer.cornerRadius = AlpsDesignTokens.radiusCard
     actionCard.clipsToBounds = true
     actionCard.translatesAutoresizingMaskIntoConstraints = false
-    actionCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
+    actionCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 80).isActive = true
     stackView.addArrangedSubview(actionCard)
 
     let actionStack = UIStackView()
-    actionStack.axis = .horizontal
-    actionStack.spacing = 12
-    actionStack.alignment = .center
+    actionStack.axis = .vertical
+    actionStack.spacing = 8
+    actionStack.alignment = .fill
     actionStack.translatesAutoresizingMaskIntoConstraints = false
     actionCard.addSubview(actionStack)
+
+    NSLayoutConstraint.activate([
+      actionStack.topAnchor.constraint(equalTo: actionCard.topAnchor, constant: 12),
+      actionStack.leftAnchor.constraint(equalTo: actionCard.leftAnchor, constant: 12),
+      actionStack.rightAnchor.constraint(equalTo: actionCard.rightAnchor, constant: -12),
+      actionStack.bottomAnchor.constraint(equalTo: actionCard.bottomAnchor, constant: -12),
+    ])
+
+    let titleStack = UIStackView()
+    titleStack.axis = .horizontal
+    titleStack.spacing = 8
+    titleStack.alignment = .center
+    actionStack.addArrangedSubview(titleStack)
 
     let actionLabel = UILabel()
     actionLabel.text = "Continue conversation"
     actionLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
     actionLabel.textColor = AlpsDesignTokens.textMid
-    actionStack.addArrangedSubview(actionLabel)
+    titleStack.addArrangedSubview(actionLabel)
 
-    let spacer = UIView()
-    actionStack.addArrangedSubview(spacer)
+    titleStack.addArrangedSubview(UIView())
 
     let chevron = UILabel()
     chevron.text = "›"
     chevron.font = UIFont.systemFont(ofSize: 20)
     chevron.textColor = AlpsDesignTokens.textBody
-    actionStack.addArrangedSubview(chevron)
+    titleStack.addArrangedSubview(chevron)
 
-    NSLayoutConstraint.activate([
-      actionStack.topAnchor.constraint(equalTo: actionCard.topAnchor, constant: 16),
-      actionStack.leftAnchor.constraint(equalTo: actionCard.leftAnchor, constant: 12),
-      actionStack.rightAnchor.constraint(equalTo: actionCard.rightAnchor, constant: -12),
-      actionStack.bottomAnchor.constraint(equalTo: actionCard.bottomAnchor, constant: -16),
-    ])
+    if config.conversationId != nil {
+      guard let email = config.visitorEmail else { return }
+
+      apiClient.fetchCustomerConversations(email: email) { [weak self] result in
+        DispatchQueue.main.async {
+          switch result {
+          case .success(let response):
+            if let first = response.conversations.first, let lastMsg = first.lastMessage {
+              let preview = String((lastMsg.content).prefix(60))
+              let previewLabel = UILabel()
+              previewLabel.text = preview
+              previewLabel.font = UIFont.systemFont(ofSize: 12)
+              previewLabel.textColor = AlpsDesignTokens.textBody
+              previewLabel.numberOfLines = 2
+              actionStack.addArrangedSubview(previewLabel)
+
+              let timeLabel = UILabel()
+              timeLabel.text = self?.formatDate(first.lastMessageAt ?? first.createdAt) ?? ""
+              timeLabel.font = UIFont.systemFont(ofSize: 12)
+              timeLabel.textColor = AlpsDesignTokens.textLight
+              actionStack.addArrangedSubview(timeLabel)
+            }
+          case .failure:
+            break
+          }
+        }
+      }
+    }
+
+    let tapAction = UITapGestureRecognizer(target: self, action: #selector(didTapContinueAction))
+    actionCard.addGestureRecognizer(tapAction)
+    actionCard.isUserInteractionEnabled = true
 
     let findCard = UIView()
     findCard.backgroundColor = .white
@@ -219,6 +290,10 @@ class AlpsHomeViewController: UIViewController {
       searchLabel.leftAnchor.constraint(equalTo: searchIcon.rightAnchor, constant: 8),
       searchLabel.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
     ])
+
+    let tapSearch = UITapGestureRecognizer(target: self, action: #selector(didTapSearch))
+    searchBar.addGestureRecognizer(tapSearch)
+    searchBar.isUserInteractionEnabled = true
 
     let categoriesStack = UIStackView()
     categoriesStack.axis = .vertical
@@ -278,6 +353,14 @@ class AlpsHomeViewController: UIViewController {
     }
   }
 
+  @objc private func didTapContinueAction() {
+    panelViewController?.switchTab(to: .messages)
+  }
+
+  @objc private func didTapSearch() {
+    panelViewController?.switchTab(to: .answers)
+  }
+
   func updateWidgetData(_ data: WidgetDataResponse) {
     widgetData = data
     debugLabel.isHidden = false
@@ -291,5 +374,14 @@ class AlpsHomeViewController: UIViewController {
     debugLabel.isHidden = false
     debugLabel.text = "❌ Failed to load: \(error)"
     debugLabel.textColor = .systemRed
+  }
+
+  private func formatDate(_ dateString: String) -> String {
+    let formatter = ISO8601DateFormatter()
+    if let date = formatter.date(from: dateString) {
+      let relativeFormatter = RelativeDateTimeFormatter()
+      return relativeFormatter.localizedString(for: date, relativeTo: Date())
+    }
+    return dateString
   }
 }
