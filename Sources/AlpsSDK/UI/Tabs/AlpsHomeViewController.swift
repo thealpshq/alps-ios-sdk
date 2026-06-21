@@ -115,8 +115,6 @@ class AlpsHomeViewController: UIViewController {
       headerHStack.bottomAnchor.constraint(equalTo: headerCard.bottomAnchor, constant: -16),
     ])
 
-    headerHStack.addArrangedSubview(headerLeftStack)
-
     let spacer = UIView()
     headerHStack.addArrangedSubview(spacer)
 
@@ -125,6 +123,7 @@ class AlpsHomeViewController: UIViewController {
     let avatarContainer = UIView()
     avatarContainer.translatesAutoresizingMaskIntoConstraints = false
     avatarContainer.widthAnchor.constraint(equalToConstant: CGFloat(agentCount) * 16 + 12).isActive = true
+    avatarContainer.heightAnchor.constraint(equalToConstant: 28).isActive = true
     headerHStack.addArrangedSubview(avatarContainer)
 
     let displayAgents = Array(agents.prefix(3))
