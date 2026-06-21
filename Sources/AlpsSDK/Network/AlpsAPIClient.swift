@@ -15,7 +15,7 @@ class AlpsAPIClient {
     request(endpoint, responseType: WidgetDataWrapper.self) { result in
       switch result {
       case .success(let wrapper):
-        completion(.success(wrapper.data))
+        completion(.success(wrapper.data.data))
       case .failure(let error):
         completion(.failure(error))
       }

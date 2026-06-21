@@ -8,6 +8,10 @@ struct ApiResponse<T: Codable>: Codable {
 }
 
 struct WidgetDataWrapper: Codable {
+  let data: WidgetDataInner
+}
+
+struct WidgetDataInner: Codable {
   let data: WidgetDataResponse
 }
 
