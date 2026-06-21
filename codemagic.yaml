@@ -27,5 +27,20 @@
           zip -r AlpsSDKExample.zip Payload/
           mkdir -p simulator-app
           mv AlpsSDKExample.zip simulator-app/
+      - name: Upload to Appetize.io
+        script: |
+          cd build-output/simulator-app
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Token $APPETIZE_API_TOKEN" \
+            -F "file=@AlpsSDKExample.zip" \
+            -F "platform=ios" \
+            "https://api.appetize.io/v1/apps")
+          echo "Appetize response: $RESPONSE"
+          PUBLIC_KEY=$(echo $RESPONSE | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('publicKey',''))" 2>/dev/null || echo "")
+          if [ -n "$PUBLIC_KEY" ]; then
+            echo "Preview URL: https://appetize.io/app/$PUBLIC_KEY"
+          else
+            echo "Failed to get public key from response"
+          fi
     artifacts:
       - build-output/simulator-app/**/*.zip

@@ -89,6 +89,25 @@ class AlpsHomeViewController: UIViewController {
     headerHStack.translatesAutoresizingMaskIntoConstraints = false
     headerCard.addSubview(headerHStack)
 
+    let headerLeftStack = UIStackView()
+    headerLeftStack.axis = .vertical
+    headerLeftStack.spacing = 4
+    headerLeftStack.alignment = .leading
+    headerHStack.addArrangedSubview(headerLeftStack)
+
+    let teamNameLabel = UILabel()
+    teamNameLabel.text = data.teamName ?? "Support"
+    teamNameLabel.font = UIFont.systemFont(ofSize: 11)
+    teamNameLabel.textColor = AlpsDesignTokens.textLight
+    headerLeftStack.addArrangedSubview(teamNameLabel)
+
+    let welcomeLabel = UILabel()
+    welcomeLabel.text = data.welcomeMessage ?? ""
+    welcomeLabel.numberOfLines = 0
+    welcomeLabel.font = UIFont.systemFont(ofSize: 14)
+    welcomeLabel.textColor = .white
+    headerLeftStack.addArrangedSubview(welcomeLabel)
+
     NSLayoutConstraint.activate([
       headerHStack.topAnchor.constraint(equalTo: headerCard.topAnchor, constant: 16),
       headerHStack.leftAnchor.constraint(equalTo: headerCard.leftAnchor, constant: 16),
@@ -96,22 +115,18 @@ class AlpsHomeViewController: UIViewController {
       headerHStack.bottomAnchor.constraint(equalTo: headerCard.bottomAnchor, constant: -16),
     ])
 
-    let welcomeLabel = UILabel()
-    welcomeLabel.text = data.welcomeMessage ?? ""
-    welcomeLabel.numberOfLines = 0
-    welcomeLabel.font = UIFont.systemFont(ofSize: 14)
-    welcomeLabel.textColor = .white
-    headerHStack.addArrangedSubview(welcomeLabel)
+    headerHStack.addArrangedSubview(headerLeftStack)
 
     let spacer = UIView()
     headerHStack.addArrangedSubview(spacer)
 
+    let agents = data.onlineAgents ?? []
+    let agentCount = min(agents.count, 3)
     let avatarContainer = UIView()
     avatarContainer.translatesAutoresizingMaskIntoConstraints = false
-    avatarContainer.widthAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
+    avatarContainer.widthAnchor.constraint(equalToConstant: CGFloat(agentCount) * 16 + 12).isActive = true
     headerHStack.addArrangedSubview(avatarContainer)
 
-    let agents = data.onlineAgents ?? []
     let displayAgents = Array(agents.prefix(3))
 
     for (index, agent) in displayAgents.enumerated() {
@@ -138,7 +153,7 @@ class AlpsHomeViewController: UIViewController {
         initial.centerYAnchor.constraint(equalTo: avatar.centerYAnchor),
       ])
 
-      let xOffset = CGFloat(index) * -8
+      let xOffset = CGFloat(index) * 16
       NSLayoutConstraint.activate([
         avatar.leftAnchor.constraint(equalTo: avatarContainer.leftAnchor, constant: xOffset),
         avatar.topAnchor.constraint(equalTo: avatarContainer.topAnchor),
@@ -272,8 +287,10 @@ class AlpsHomeViewController: UIViewController {
     searchBar.heightAnchor.constraint(equalToConstant: 40).isActive = true
     findStack.addArrangedSubview(searchBar)
 
-    let searchIcon = UILabel()
-    searchIcon.text = "🔍"
+    let searchIcon = UIImageView()
+    searchIcon.image = UIImage(systemName: "magnifyingglass")
+    searchIcon.tintColor = AlpsDesignTokens.textLight
+    searchIcon.contentMode = .scaleAspectFit
     searchIcon.translatesAutoresizingMaskIntoConstraints = false
     searchBar.addSubview(searchIcon)
 
@@ -287,6 +304,8 @@ class AlpsHomeViewController: UIViewController {
     NSLayoutConstraint.activate([
       searchIcon.leftAnchor.constraint(equalTo: searchBar.leftAnchor, constant: 12),
       searchIcon.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+      searchIcon.widthAnchor.constraint(equalToConstant: 16),
+      searchIcon.heightAnchor.constraint(equalToConstant: 16),
       searchLabel.leftAnchor.constraint(equalTo: searchIcon.rightAnchor, constant: 8),
       searchLabel.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
     ])

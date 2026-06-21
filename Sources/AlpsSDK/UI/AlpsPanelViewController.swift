@@ -11,6 +11,10 @@ class AlpsPanelViewController: UIViewController {
   private let messagesButton = UIButton(type: .system)
   private let answersButton = UIButton(type: .system)
   private let contentView = UIView()
+  private let headerInitialsLabel = UILabel()
+  private let headerAvatarImageView = UIImageView()
+  private let headerTeamLabel = UILabel()
+  private let headerWelcomeLabel = UILabel()
   private var currentTab: Tab = .home
   private var homeViewController: AlpsHomeViewController?
   private var messagesViewController: AlpsMessagesViewController?
@@ -75,41 +79,39 @@ class AlpsPanelViewController: UIViewController {
     logoContainer.heightAnchor.constraint(equalToConstant: 42).isActive = true
     headerStack.addArrangedSubview(logoContainer)
 
-    let avatar = UIImageView()
-    avatar.contentMode = .scaleAspectFill
-    avatar.layer.cornerRadius = 21
-    avatar.clipsToBounds = true
-    avatar.backgroundColor = AlpsDesignTokens.avatarBg
-    avatar.translatesAutoresizingMaskIntoConstraints = false
-    logoContainer.addSubview(avatar)
+    headerAvatarImageView.contentMode = .scaleAspectFill
+    headerAvatarImageView.layer.cornerRadius = 21
+    headerAvatarImageView.clipsToBounds = true
+    headerAvatarImageView.backgroundColor = AlpsDesignTokens.avatarBg
+    headerAvatarImageView.translatesAutoresizingMaskIntoConstraints = false
+    logoContainer.addSubview(headerAvatarImageView)
 
     NSLayoutConstraint.activate([
-      avatar.topAnchor.constraint(equalTo: logoContainer.topAnchor),
-      avatar.leftAnchor.constraint(equalTo: logoContainer.leftAnchor),
-      avatar.rightAnchor.constraint(equalTo: logoContainer.rightAnchor),
-      avatar.bottomAnchor.constraint(equalTo: logoContainer.bottomAnchor),
+      headerAvatarImageView.topAnchor.constraint(equalTo: logoContainer.topAnchor),
+      headerAvatarImageView.leftAnchor.constraint(equalTo: logoContainer.leftAnchor),
+      headerAvatarImageView.rightAnchor.constraint(equalTo: logoContainer.rightAnchor),
+      headerAvatarImageView.bottomAnchor.constraint(equalTo: logoContainer.bottomAnchor),
     ])
 
-    let initialsLabel = UILabel()
     let teamName = widgetData?.teamName ?? "A"
-    initialsLabel.text = String(teamName.prefix(1)).uppercased()
-    initialsLabel.textColor = .white
-    initialsLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-    initialsLabel.textAlignment = .center
-    initialsLabel.translatesAutoresizingMaskIntoConstraints = false
-    logoContainer.addSubview(initialsLabel)
+    headerInitialsLabel.text = String(teamName.prefix(1)).uppercased()
+    headerInitialsLabel.textColor = .white
+    headerInitialsLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+    headerInitialsLabel.textAlignment = .center
+    headerInitialsLabel.translatesAutoresizingMaskIntoConstraints = false
+    logoContainer.addSubview(headerInitialsLabel)
 
     NSLayoutConstraint.activate([
-      initialsLabel.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
-      initialsLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+      headerInitialsLabel.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
+      headerInitialsLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
     ])
 
     if let logoURL = widgetData?.teamAvatarUrl, let url = URL(string: logoURL) {
       URLSession.shared.dataTask(with: url) { data, _, _ in
         DispatchQueue.main.async {
           if let data = data, let image = UIImage(data: data) {
-            avatar.image = image
-            initialsLabel.isHidden = true
+            self.headerAvatarImageView.image = image
+            self.headerInitialsLabel.isHidden = true
           }
         }
       }.resume()
@@ -121,18 +123,16 @@ class AlpsPanelViewController: UIViewController {
     textStack.alignment = .leading
     headerStack.addArrangedSubview(textStack)
 
-    let teamLabel = UILabel()
-    teamLabel.text = widgetData?.teamName ?? "Support"
-    teamLabel.font = UIFont.systemFont(ofSize: 11)
-    teamLabel.textColor = AlpsDesignTokens.textLight
-    textStack.addArrangedSubview(teamLabel)
+    headerTeamLabel.text = widgetData?.teamName ?? "Support"
+    headerTeamLabel.font = UIFont.systemFont(ofSize: 11)
+    headerTeamLabel.textColor = AlpsDesignTokens.textLight
+    textStack.addArrangedSubview(headerTeamLabel)
 
-    let welcomeLabel = UILabel()
-    welcomeLabel.text = widgetData?.welcomeMessage ?? ""
-    welcomeLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-    welcomeLabel.textColor = .white
-    welcomeLabel.numberOfLines = 0
-    textStack.addArrangedSubview(welcomeLabel)
+    headerWelcomeLabel.text = widgetData?.welcomeMessage ?? ""
+    headerWelcomeLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+    headerWelcomeLabel.textColor = .white
+    headerWelcomeLabel.numberOfLines = 0
+    textStack.addArrangedSubview(headerWelcomeLabel)
 
     contentView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(contentView)
@@ -360,8 +360,26 @@ class AlpsPanelViewController: UIViewController {
   func updateWidgetData(_ data: WidgetDataResponse) {
     widgetData = data
     fetchError = nil
+    updateHeader(data)
     homeViewController?.updateWidgetData(data)
     answersViewController?.updateWidgetData(data)
+  }
+
+  private func updateHeader(_ data: WidgetDataResponse) {
+    let teamName = data.teamName ?? "Support"
+    headerTeamLabel.text = teamName
+    headerWelcomeLabel.text = data.welcomeMessage ?? ""
+    headerInitialsLabel.text = String(teamName.prefix(1)).uppercased()
+    if let urlStr = data.teamAvatarUrl, let url = URL(string: urlStr) {
+      URLSession.shared.dataTask(with: url) { [weak self] d, _, _ in
+        DispatchQueue.main.async {
+          if let d = d, let img = UIImage(data: d) {
+            self?.headerAvatarImageView.image = img
+            self?.headerInitialsLabel.isHidden = true
+          }
+        }
+      }.resume()
+    }
   }
 
   func showError(_ error: String) {

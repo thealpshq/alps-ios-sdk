@@ -43,9 +43,13 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
     searchContainer.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(searchContainer)
 
-    let searchIcon = UILabel()
-    searchIcon.text = "🔍"
+    let searchIcon = UIImageView()
+    searchIcon.image = UIImage(systemName: "magnifyingglass")
+    searchIcon.tintColor = AlpsDesignTokens.textLight
+    searchIcon.contentMode = .scaleAspectFit
     searchIcon.translatesAutoresizingMaskIntoConstraints = false
+    searchIcon.widthAnchor.constraint(equalToConstant: 16).isActive = true
+    searchIcon.heightAnchor.constraint(equalToConstant: 16).isActive = true
     searchContainer.addSubview(searchIcon)
 
     searchField.placeholder = "Search for articles and videos"
