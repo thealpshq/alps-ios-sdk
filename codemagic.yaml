@@ -19,7 +19,10 @@
             -configuration Release \
             -sdk iphoneos \
             -archivePath build-output/AlpsSDKExample.xcarchive \
-            -derivedDataPath build-output
+            -derivedDataPath build-output \
+            -allowProvisioningUpdates \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
       - name: Create IPA for BrowserStack
         script: |
           mkdir -p build-output/ExportOptions
