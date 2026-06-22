@@ -12,35 +12,42 @@
       - name: Generate Xcode Project
         script: |
           xcodegen generate
-      - name: Build Test App for Simulator
+      - name: Build Test App for Device
         script: |
-          xcodebuild build \
+          xcodebuild archive \
             -scheme AlpsSDKExample \
             -configuration Release \
-            -destination 'generic/platform=iOS Simulator' \
+            -sdk iphoneos \
+            -archivePath build-output/AlpsSDKExample.xcarchive \
             -derivedDataPath build-output
-      - name: Create App Bundle for Simulator
+      - name: Create IPA for BrowserStack
         script: |
-          mkdir -p build-output/Payload
-          cp -r "build-output/Build/Products/Release-iphonesimulator/AlpsSDKExample.app" build-output/Payload/
-          cd build-output
-          zip -r AlpsSDKExample.zip Payload/
-          mkdir -p simulator-app
-          mv AlpsSDKExample.zip simulator-app/
-      - name: Upload to Appetize.io
+          mkdir -p build-output/ExportOptions
+          cat > build-output/ExportOptions/options.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>ad-hoc</string>
+            <key>signingStyle</key>
+            <string>automatic</string>
+            <key>stripSwiftSymbols</key>
+            <true/>
+            <key>teamID</key>
+            <string></string>
+          </dict>
+          </plist>
+          EOF
+
+          xcodebuild -exportArchive \
+            -archivePath build-output/AlpsSDKExample.xcarchive \
+            -exportOptionsPlist build-output/ExportOptions/options.plist \
+            -exportPath build-output/ipa-export
+      - name: Prepare for BrowserStack
         script: |
-          cd build-output/simulator-app
-          RESPONSE=$(curl -s -X POST \
-            -H "Authorization: Token $APPETIZE_API_TOKEN" \
-            -F "file=@AlpsSDKExample.zip" \
-            -F "platform=ios" \
-            "https://api.appetize.io/v1/apps")
-          echo "Appetize response: $RESPONSE"
-          PUBLIC_KEY=$(echo $RESPONSE | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('publicKey',''))" 2>/dev/null || echo "")
-          if [ -n "$PUBLIC_KEY" ]; then
-            echo "Preview URL: https://appetize.io/app/$PUBLIC_KEY"
-          else
-            echo "Failed to get public key from response"
-          fi
+          mkdir -p build-output/browserstack
+          cp build-output/ipa-export/*.ipa build-output/browserstack/
+          echo "IPA ready for BrowserStack testing"
     artifacts:
-      - build-output/simulator-app/**/*.zip
+      - build-output/browserstack/**/*.ipa
