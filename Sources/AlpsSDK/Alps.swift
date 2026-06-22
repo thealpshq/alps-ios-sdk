@@ -54,6 +54,13 @@ public final class Alps {
     }
   }
 
+  /// Hide the automatic launcher button (use when integrating with your own button)
+  public static func hideLauncher() {
+    DispatchQueue.main.async {
+      shared.windowManager?.hideLauncher()
+    }
+  }
+
   /// Set the visitor identity (name and email)
   /// - Parameters:
   ///   - name: Visitor name

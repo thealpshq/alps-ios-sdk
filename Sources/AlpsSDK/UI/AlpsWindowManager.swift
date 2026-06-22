@@ -71,6 +71,10 @@ class AlpsWindowManager {
     panelViewController = nil
   }
 
+  func hideLauncher() {
+    launcherButton?.removeFromSuperview()
+  }
+
   func updateVisitorIdentity(name: String, email: String) {
     config.visitorName = name
     config.visitorEmail = email
