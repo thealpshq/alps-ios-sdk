@@ -17,7 +17,7 @@ class AlpsPusherClient {
   }
 
   func connect(pusherKey: String, cluster: String, conversationId: String) {
-    var options = PusherClientOptions(host: .cluster(cluster))
+    let options = PusherClientOptions(host: .cluster(cluster))
 
     pusher = Pusher(key: pusherKey, options: options)
     pusher?.connect()
