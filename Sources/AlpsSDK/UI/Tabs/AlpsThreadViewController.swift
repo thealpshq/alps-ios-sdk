@@ -88,8 +88,12 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
   private func setupHeader() {
     headerView.backgroundColor = .white
     headerView.translatesAutoresizingMaskIntoConstraints = false
-    headerView.layer.borderBottomWidth = 1
-    headerView.layer.borderBottomColor = AlpsDesignTokens.border.cgColor
+
+    let borderView = UIView()
+    borderView.backgroundColor = AlpsDesignTokens.border
+    borderView.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(borderView)
+
     view.addSubview(headerView)
 
     let backButton = UIButton(type: .system)
@@ -145,6 +149,11 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
       headerView.rightAnchor.constraint(equalTo: view.rightAnchor),
       headerView.heightAnchor.constraint(equalToConstant: 64),
 
+      borderView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+      borderView.leftAnchor.constraint(equalTo: view.leftAnchor),
+      borderView.rightAnchor.constraint(equalTo: view.rightAnchor),
+      borderView.heightAnchor.constraint(equalToConstant: 1),
+
       backButton.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 12),
       backButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
 
@@ -169,8 +178,6 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
   private func setupInputBar() {
     inputContainer.backgroundColor = .white
     inputContainer.translatesAutoresizingMaskIntoConstraints = false
-    inputContainer.layer.borderTopWidth = 1
-    inputContainer.layer.borderTopColor = AlpsDesignTokens.border.cgColor
     view.addSubview(inputContainer)
 
     let closedNotice = UIView()
@@ -203,10 +210,6 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
     messageInput.textColor = AlpsDesignTokens.textMid
     messageInput.delegate = self
     messageInput.isScrollEnabled = false
-    messageInput.placeholder = "Type a message..."
-    messageInput.layer.borderWidth = 1.5
-    messageInput.layer.borderColor = AlpsDesignTokens.border.cgColor
-    messageInput.layer.cornerRadius = 12
     inputContainer.addSubview(messageInput)
 
     emojiButton.setTitle("😊", for: .normal)
@@ -401,7 +404,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
       }
     }
 
-    pusherClient?.onTypingIndicator = { [weak self] senderName in
+    pusherClient?.onTypingIndicator = { senderName in
       print("[ThreadVC] \(senderName) is typing")
     }
 

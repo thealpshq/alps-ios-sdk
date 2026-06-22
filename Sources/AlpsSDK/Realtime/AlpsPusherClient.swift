@@ -17,13 +17,7 @@ class AlpsPusherClient {
   }
 
   func connect(pusherKey: String, cluster: String, conversationId: String) {
-    let authMethod = PusherClientOptions.AuthMethod.endpoint(
-      "\(apiBaseURL)/pusher/auth"
-    )
-
     var options = PusherClientOptions(host: .cluster(cluster))
-    options.authMethod = authMethod
-    options.attemptToReturnJSONObjectInEvent = true
 
     pusher = Pusher(key: pusherKey, options: options)
     pusher?.connect()
