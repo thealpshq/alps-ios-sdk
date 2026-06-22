@@ -416,11 +416,11 @@ class AlpsHomeViewController: UIViewController {
   }
 
   @objc private func didTapContinueAction() {
-    panelViewController?.switchTab(to: .messages)
+    // Navigation handled by web widget
   }
 
   @objc private func didTapSearch() {
-    panelViewController?.switchTab(to: .answers)
+    // Navigation handled by web widget
   }
 
   @objc private func didTapCategory(_ gesture: UITapGestureRecognizer) {
