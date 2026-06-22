@@ -145,7 +145,7 @@ class AlpsHomeViewController: UIViewController {
       continueCard.layer.cornerRadius = 8
       continueCard.translatesAutoresizingMaskIntoConstraints = false
       continueCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
-      actionCardsStack.addArrangedSubview(continueCard)
+      actionCardsStack?.addArrangedSubview(continueCard)
 
       let continueStack = UIStackView()
       continueStack.axis = .vertical
