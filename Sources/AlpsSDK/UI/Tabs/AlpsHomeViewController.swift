@@ -8,6 +8,7 @@ class AlpsHomeViewController: UIViewController {
 
   private let scrollView = UIScrollView()
   private let stackView = UIStackView()
+  private var actionCardsStack: UIStackView?
 
   init(
     config: AlpsConfig,
@@ -131,11 +132,12 @@ class AlpsHomeViewController: UIViewController {
     welcomeLabel.textColor = .white
     headerLeftStack.addArrangedSubview(welcomeLabel)
 
-    let actionCardsStack = UIStackView()
-    actionCardsStack.axis = .vertical
-    actionCardsStack.spacing = 8
-    actionCardsStack.translatesAutoresizingMaskIntoConstraints = false
-    headerLeftStack.addArrangedSubview(actionCardsStack)
+    let cardsStack = UIStackView()
+    cardsStack.axis = .vertical
+    cardsStack.spacing = 8
+    cardsStack.translatesAutoresizingMaskIntoConstraints = false
+    headerLeftStack.addArrangedSubview(cardsStack)
+    self.actionCardsStack = cardsStack
 
     if config.conversationId != nil {
       let continueCard = UIView()
