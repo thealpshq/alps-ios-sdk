@@ -1,0 +1,615 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0670074281C5A1B71842C714 /* AlpsArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCABECBE09EDCFF4C624F177 /* AlpsArticleViewController.swift */; };
+		330F4257F21175445E1F3194 /* Alps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3BC0D881CE7E00449AD926 /* Alps.swift */; };
+		33428BFECB135E645B50926D /* AlpsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943724F98165904F050D7464 /* AlpsModels.swift */; };
+		4A3451820F7BAFEC713FEAFA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DCDDC177A1978D9E58586C /* ViewController.swift */; };
+		61666C5A357A6083DC3F8CE8 /* AlpsAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2816F3DA0BE3788FF47356C /* AlpsAPIClient.swift */; };
+		68BEF54940F0FD1F3E497854 /* AlpsWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAEAA21AB0FBB137F8BF820 /* AlpsWindowManager.swift */; };
+		6AFEE9DCCB32542E755FD93C /* AlpsConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2319497FCA06DF5A6F7D4B /* AlpsConversationCell.swift */; };
+		7D8FBAB387FEF7989103A2B0 /* AlpsThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05343BDB96EC8667B30C1B30 /* AlpsThreadViewController.swift */; };
+		8907D7C1591427633D86D84C /* AlpsAnswersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43EE20B80B2CBC5F53AFE7E4 /* AlpsAnswersViewController.swift */; };
+		8CF31A01004202C25A94003E /* AlpsSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 811E2B56B80981ECCCFF5270 /* AlpsSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		93F9F97CB47C44CA8C87D77D /* PusherSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 140398BCA814DE378A5302AB /* PusherSwift */; };
+		973BD81DDEB3D596AD846BA6 /* AlpsCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FD06896BFA650F074B89DF /* AlpsCategoryViewController.swift */; };
+		A82D548A81EF785C84DCF70A /* AlpsSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 811E2B56B80981ECCCFF5270 /* AlpsSDK.framework */; };
+		B5075179B7669D98BFF0E848 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EE323E6F16066725A7E2FE /* AppDelegate.swift */; };
+		BB7BA6BDFBA9602C8D05FE41 /* AlpsHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A8CB64C83FB84D54DECDDD /* AlpsHomeViewController.swift */; };
+		C316914D4B29BC9096AB6312 /* AlpsMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F839F16927FE99DE307BB7 /* AlpsMessagesViewController.swift */; };
+		C5AAAF353A9ABBA706155031 /* AlpsConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95963727957A4085976DD8D /* AlpsConfig.swift */; };
+		C8169598A87CA901C8654C5A /* AlpsVisitorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D53F6149812DD1F1F91E163 /* AlpsVisitorStore.swift */; };
+		C8AD783C3CB047110C574AFF /* AlpsPusherClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8B24BF56C8AC4860A79EA7 /* AlpsPusherClient.swift */; };
+		CA1B6816CA2AD668562DCD4B /* AlpsDesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2F0A5EE6357E3AD11CE22 /* AlpsDesignTokens.swift */; };
+		CC56678157BAD9B239075993 /* AlpsEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08960570794B7DBBCDAA5CD0 /* AlpsEndpoints.swift */; };
+		D36338E10C243CB2DDFE6DE6 /* AlpsPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35450E22C30940266FDA0C2 /* AlpsPanelViewController.swift */; };
+		D5D3541E05B6A67F46289B7C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EDE28562A5F474A37A89A06 /* LaunchScreen.xib */; };
+		DB6A258ADF2A4030FBD118E5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA6E57A2DD95F8FD81447A5 /* main.swift */; };
+		E7B786BEA803B2813EBAF08F /* AlpsLauncherButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0585EBEF2003E0C9BB53320A /* AlpsLauncherButton.swift */; };
+		FDF5D75A92311A458587C191 /* AlpsMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D0A1BBF6D11E13B2A48A21 /* AlpsMessageCell.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BBA64EB8463229935C9B6658 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75C3CB6F91852ADDD525E37C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CC741D0AF8F8C22388732C5F;
+			remoteInfo = AlpsSDK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B6656DCF2849F8B30B72E83D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8CF31A01004202C25A94003E /* AlpsSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		05343BDB96EC8667B30C1B30 /* AlpsThreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsThreadViewController.swift; sourceTree = "<group>"; };
+		0585EBEF2003E0C9BB53320A /* AlpsLauncherButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsLauncherButton.swift; sourceTree = "<group>"; };
+		05EE323E6F16066725A7E2FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		08960570794B7DBBCDAA5CD0 /* AlpsEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsEndpoints.swift; sourceTree = "<group>"; };
+		08FD06896BFA650F074B89DF /* AlpsCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsCategoryViewController.swift; sourceTree = "<group>"; };
+		3EDE28562A5F474A37A89A06 /* LaunchScreen.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		40A2F0A5EE6357E3AD11CE22 /* AlpsDesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsDesignTokens.swift; sourceTree = "<group>"; };
+		43A8CB64C83FB84D54DECDDD /* AlpsHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsHomeViewController.swift; sourceTree = "<group>"; };
+		43EE20B80B2CBC5F53AFE7E4 /* AlpsAnswersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsAnswersViewController.swift; sourceTree = "<group>"; };
+		44DCDDC177A1978D9E58586C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		554642F8F6CD03FD1283719F /* AlpsSDKExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AlpsSDKExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F3BC0D881CE7E00449AD926 /* Alps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alps.swift; sourceTree = "<group>"; };
+		811E2B56B80981ECCCFF5270 /* AlpsSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlpsSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		943724F98165904F050D7464 /* AlpsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsModels.swift; sourceTree = "<group>"; };
+		9B2319497FCA06DF5A6F7D4B /* AlpsConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsConversationCell.swift; sourceTree = "<group>"; };
+		9D53F6149812DD1F1F91E163 /* AlpsVisitorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsVisitorStore.swift; sourceTree = "<group>"; };
+		9D8B24BF56C8AC4860A79EA7 /* AlpsPusherClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsPusherClient.swift; sourceTree = "<group>"; };
+		A721585B7F6E7C3363EF813C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		AEAEAA21AB0FBB137F8BF820 /* AlpsWindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsWindowManager.swift; sourceTree = "<group>"; };
+		C4F839F16927FE99DE307BB7 /* AlpsMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsMessagesViewController.swift; sourceTree = "<group>"; };
+		DCABECBE09EDCFF4C624F177 /* AlpsArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsArticleViewController.swift; sourceTree = "<group>"; };
+		E95963727957A4085976DD8D /* AlpsConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsConfig.swift; sourceTree = "<group>"; };
+		EAA6E57A2DD95F8FD81447A5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		F2816F3DA0BE3788FF47356C /* AlpsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsAPIClient.swift; sourceTree = "<group>"; };
+		F35450E22C30940266FDA0C2 /* AlpsPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsPanelViewController.swift; sourceTree = "<group>"; };
+		F6D0A1BBF6D11E13B2A48A21 /* AlpsMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlpsMessageCell.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E5980F57CBC481B5ABE4EE65 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93F9F97CB47C44CA8C87D77D /* PusherSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA128D7E12FB23E9AEA5711B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A82D548A81EF785C84DCF70A /* AlpsSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		084F074B32103C465DED0FB3 /* Realtime */ = {
+			isa = PBXGroup;
+			children = (
+				9D8B24BF56C8AC4860A79EA7 /* AlpsPusherClient.swift */,
+			);
+			path = Realtime;
+			sourceTree = "<group>";
+		};
+		0CB5F28F1B6876DA6C6BA40B /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				DCABECBE09EDCFF4C624F177 /* AlpsArticleViewController.swift */,
+				40A2F0A5EE6357E3AD11CE22 /* AlpsDesignTokens.swift */,
+				0585EBEF2003E0C9BB53320A /* AlpsLauncherButton.swift */,
+				F35450E22C30940266FDA0C2 /* AlpsPanelViewController.swift */,
+				AEAEAA21AB0FBB137F8BF820 /* AlpsWindowManager.swift */,
+				BDCB0A208266E26894E35362 /* Cells */,
+				8CCF024470698F9D7D6C9962 /* Tabs */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		14D5ABFB1D27BBCBC76FFB2F /* AlpsSDK */ = {
+			isa = PBXGroup;
+			children = (
+				6F3BC0D881CE7E00449AD926 /* Alps.swift */,
+				E95963727957A4085976DD8D /* AlpsConfig.swift */,
+				91BEBE1D48968B15642A1DFB /* Network */,
+				084F074B32103C465DED0FB3 /* Realtime */,
+				76EF9BF616606D60F9E37FC7 /* Storage */,
+				0CB5F28F1B6876DA6C6BA40B /* UI */,
+			);
+			name = AlpsSDK;
+			path = Sources/AlpsSDK;
+			sourceTree = "<group>";
+		};
+		57794B4B09B40A3CD7A2870A /* AlpsSDKExample */ = {
+			isa = PBXGroup;
+			children = (
+				05EE323E6F16066725A7E2FE /* AppDelegate.swift */,
+				A721585B7F6E7C3363EF813C /* Info.plist */,
+				3EDE28562A5F474A37A89A06 /* LaunchScreen.xib */,
+				EAA6E57A2DD95F8FD81447A5 /* main.swift */,
+				44DCDDC177A1978D9E58586C /* ViewController.swift */,
+			);
+			name = AlpsSDKExample;
+			path = Example/AlpsSDKExample;
+			sourceTree = "<group>";
+		};
+		5B026317743972E482F413F2 = {
+			isa = PBXGroup;
+			children = (
+				14D5ABFB1D27BBCBC76FFB2F /* AlpsSDK */,
+				57794B4B09B40A3CD7A2870A /* AlpsSDKExample */,
+				C0DD8C5C9DBAA5EF7CFB177A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		76EF9BF616606D60F9E37FC7 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				9D53F6149812DD1F1F91E163 /* AlpsVisitorStore.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		8CCF024470698F9D7D6C9962 /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				43EE20B80B2CBC5F53AFE7E4 /* AlpsAnswersViewController.swift */,
+				08FD06896BFA650F074B89DF /* AlpsCategoryViewController.swift */,
+				43A8CB64C83FB84D54DECDDD /* AlpsHomeViewController.swift */,
+				C4F839F16927FE99DE307BB7 /* AlpsMessagesViewController.swift */,
+				05343BDB96EC8667B30C1B30 /* AlpsThreadViewController.swift */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
+		91BEBE1D48968B15642A1DFB /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				F2816F3DA0BE3788FF47356C /* AlpsAPIClient.swift */,
+				08960570794B7DBBCDAA5CD0 /* AlpsEndpoints.swift */,
+				943724F98165904F050D7464 /* AlpsModels.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		BDCB0A208266E26894E35362 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				9B2319497FCA06DF5A6F7D4B /* AlpsConversationCell.swift */,
+				F6D0A1BBF6D11E13B2A48A21 /* AlpsMessageCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		C0DD8C5C9DBAA5EF7CFB177A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				811E2B56B80981ECCCFF5270 /* AlpsSDK.framework */,
+				554642F8F6CD03FD1283719F /* AlpsSDKExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		15CD1F7BD33906E5C1E4DF36 /* AlpsSDKExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22F553FC8AFB3CD3D23648CA /* Build configuration list for PBXNativeTarget "AlpsSDKExample" */;
+			buildPhases = (
+				845B56F6EA4D0BF329C5A5CC /* Sources */,
+				AA04A33231B4F64CFAB389BA /* Resources */,
+				FA128D7E12FB23E9AEA5711B /* Frameworks */,
+				B6656DCF2849F8B30B72E83D /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				40662C07F2D2795F79143385 /* PBXTargetDependency */,
+			);
+			name = AlpsSDKExample;
+			packageProductDependencies = (
+			);
+			productName = AlpsSDKExample;
+			productReference = 554642F8F6CD03FD1283719F /* AlpsSDKExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CC741D0AF8F8C22388732C5F /* AlpsSDK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5621CC6B50970E3CAB6A8D98 /* Build configuration list for PBXNativeTarget "AlpsSDK" */;
+			buildPhases = (
+				FBB895027365DD68907627BE /* Sources */,
+				E5980F57CBC481B5ABE4EE65 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AlpsSDK;
+			packageProductDependencies = (
+				140398BCA814DE378A5302AB /* PusherSwift */,
+			);
+			productName = AlpsSDK;
+			productReference = 811E2B56B80981ECCCFF5270 /* AlpsSDK.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		75C3CB6F91852ADDD525E37C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					15CD1F7BD33906E5C1E4DF36 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = C67C724A6B61B20D23DA590C /* Build configuration list for PBXProject "AlpsSDKExample" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 5B026317743972E482F413F2;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C1B3C892D1086F9C1573FE7C /* XCRemoteSwiftPackageReference "pusher-websocket-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C0DD8C5C9DBAA5EF7CFB177A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CC741D0AF8F8C22388732C5F /* AlpsSDK */,
+				15CD1F7BD33906E5C1E4DF36 /* AlpsSDKExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA04A33231B4F64CFAB389BA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5D3541E05B6A67F46289B7C /* LaunchScreen.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		845B56F6EA4D0BF329C5A5CC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5075179B7669D98BFF0E848 /* AppDelegate.swift in Sources */,
+				4A3451820F7BAFEC713FEAFA /* ViewController.swift in Sources */,
+				DB6A258ADF2A4030FBD118E5 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FBB895027365DD68907627BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				330F4257F21175445E1F3194 /* Alps.swift in Sources */,
+				61666C5A357A6083DC3F8CE8 /* AlpsAPIClient.swift in Sources */,
+				8907D7C1591427633D86D84C /* AlpsAnswersViewController.swift in Sources */,
+				0670074281C5A1B71842C714 /* AlpsArticleViewController.swift in Sources */,
+				973BD81DDEB3D596AD846BA6 /* AlpsCategoryViewController.swift in Sources */,
+				C5AAAF353A9ABBA706155031 /* AlpsConfig.swift in Sources */,
+				6AFEE9DCCB32542E755FD93C /* AlpsConversationCell.swift in Sources */,
+				CA1B6816CA2AD668562DCD4B /* AlpsDesignTokens.swift in Sources */,
+				CC56678157BAD9B239075993 /* AlpsEndpoints.swift in Sources */,
+				BB7BA6BDFBA9602C8D05FE41 /* AlpsHomeViewController.swift in Sources */,
+				E7B786BEA803B2813EBAF08F /* AlpsLauncherButton.swift in Sources */,
+				FDF5D75A92311A458587C191 /* AlpsMessageCell.swift in Sources */,
+				C316914D4B29BC9096AB6312 /* AlpsMessagesViewController.swift in Sources */,
+				33428BFECB135E645B50926D /* AlpsModels.swift in Sources */,
+				D36338E10C243CB2DDFE6DE6 /* AlpsPanelViewController.swift in Sources */,
+				C8AD783C3CB047110C574AFF /* AlpsPusherClient.swift in Sources */,
+				7D8FBAB387FEF7989103A2B0 /* AlpsThreadViewController.swift in Sources */,
+				C8169598A87CA901C8654C5A /* AlpsVisitorStore.swift in Sources */,
+				68BEF54940F0FD1F3E497854 /* AlpsWindowManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		40662C07F2D2795F79143385 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CC741D0AF8F8C22388732C5F /* AlpsSDK */;
+			targetProxy = BBA64EB8463229935C9B6658 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		054F8133DCD61284A9A98E2B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		85A12E5615A21ED5518DFA87 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_IDENTIFIER = com.tryalps.sdk.example;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Example/AlpsSDKExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9E3AE3936F1D55FF5659C57F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_IDENTIFIER = com.tryalps.sdk;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Sources/AlpsSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		A1B95A810BF36CF28A45875E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B1EE647FC75FD95661319D6B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_IDENTIFIER = com.tryalps.sdk.example;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Example/AlpsSDKExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D687FDBFE1B1B17E1BE0C46C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_IDENTIFIER = com.tryalps.sdk;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Sources/AlpsSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		22F553FC8AFB3CD3D23648CA /* Build configuration list for PBXNativeTarget "AlpsSDKExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85A12E5615A21ED5518DFA87 /* Debug */,
+				B1EE647FC75FD95661319D6B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5621CC6B50970E3CAB6A8D98 /* Build configuration list for PBXNativeTarget "AlpsSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E3AE3936F1D55FF5659C57F /* Debug */,
+				D687FDBFE1B1B17E1BE0C46C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C67C724A6B61B20D23DA590C /* Build configuration list for PBXProject "AlpsSDKExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B95A810BF36CF28A45875E /* Debug */,
+				054F8133DCD61284A9A98E2B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C1B3C892D1086F9C1573FE7C /* XCRemoteSwiftPackageReference "pusher-websocket-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pusher/pusher-websocket-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.1.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		140398BCA814DE378A5302AB /* PusherSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C1B3C892D1086F9C1573FE7C /* XCRemoteSwiftPackageReference "pusher-websocket-swift" */;
+			productName = PusherSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 75C3CB6F91852ADDD525E37C /* Project object */;
+}
