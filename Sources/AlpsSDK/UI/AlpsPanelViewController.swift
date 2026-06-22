@@ -1,29 +1,12 @@
 import UIKit
+import WebKit
 
-class AlpsPanelViewController: UIViewController {
+class AlpsPanelViewController: UIViewController, WKScriptMessageHandler {
   let config: AlpsConfig
   let apiClient: AlpsAPIClient
   var widgetData: WidgetDataResponse?
 
-  private let header = UIView()
-  private let bottomTabBar = UIView()
-  private let homeButton = UIButton(type: .system)
-  private let messagesButton = UIButton(type: .system)
-  private let answersButton = UIButton(type: .system)
-  private let contentView = UIView()
-  private let headerInitialsLabel = UILabel()
-  private let headerAvatarImageView = UIImageView()
-  private let headerTeamLabel = UILabel()
-  private let headerWelcomeLabel = UILabel()
-  private var currentTab: Tab = .home
-  private var homeViewController: AlpsHomeViewController?
-  private var messagesViewController: AlpsMessagesViewController?
-  private var answersViewController: AlpsAnswersViewController?
-  private var fetchError: String?
-
-  enum Tab {
-    case home, messages, answers
-  }
+  private let webView = WKWebView()
 
   init(
     config: AlpsConfig,
@@ -44,9 +27,53 @@ class AlpsPanelViewController: UIViewController {
     super.viewDidLoad()
     view.backgroundColor = .white
 
-    setupUI()
-    restoreVisitorIfNeeded()
-    switchTab(to: .home)
+    setupWebView()
+    loadEmbedPage()
+  }
+
+  private func setupWebView() {
+    let config = WKWebViewConfiguration()
+    config.userContentController.add(self, name: "alpsNative")
+
+    webView.configuration.userContentController.add(self, name: "close")
+    webView.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(webView)
+
+    NSLayoutConstraint.activate([
+      webView.topAnchor.constraint(equalTo: view.topAnchor),
+      webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+    ])
+  }
+
+  private func loadEmbedPage() {
+    let frontendBase = "https://tryalps.com"
+    var components = URLComponents(string: "\(frontendBase)/api/widget-embed")!
+    var queryItems: [URLQueryItem] = [
+      URLQueryItem(name: "widgetKey", value: config.widgetKey)
+    ]
+    if let name = config.visitorName, !name.isEmpty {
+      queryItems.append(URLQueryItem(name: "userName", value: name))
+    }
+    if let email = config.visitorEmail, !email.isEmpty {
+      queryItems.append(URLQueryItem(name: "userEmail", value: email))
+    }
+    components.queryItems = queryItems
+
+    guard let url = components.url else { return }
+
+    let request = URLRequest(url: url)
+    webView.load(request)
+  }
+
+  func userContentController(
+    _ userContentController: WKUserContentController,
+    didReceive message: WKScriptMessage
+  ) {
+    if message.name == "close" {
+      dismiss(animated: true)
+    }
   }
 
   private func setupUI() {

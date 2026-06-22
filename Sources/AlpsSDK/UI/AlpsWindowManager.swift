@@ -74,19 +74,13 @@ class AlpsWindowManager {
   func updateVisitorIdentity(name: String, email: String) {
     config.visitorName = name
     config.visitorEmail = email
-    panelViewController?.updateVisitorInfo(name: name, email: email)
   }
 
   private func fetchWidgetData() {
-    print("[AlpsWindowManager] Fetching widget data for key: \(config.widgetKey)")
     apiClient.fetchWidgetData { [weak self] result in
       DispatchQueue.main.async {
         switch result {
         case .success(let data):
-          print("[AlpsWindowManager] Widget data fetched successfully")
-          print("[AlpsWindowManager] Welcome message: \(data.welcomeMessage ?? "nil")")
-          print("[AlpsWindowManager] Team name: \(data.teamName ?? "nil")")
-          print("[AlpsWindowManager] Categories: \(data.categories.count)")
           if let widgetColor = data.widgetColor {
             AlpsDesignTokens.accent = UIColor(hex: widgetColor)
           }
@@ -94,12 +88,8 @@ class AlpsWindowManager {
           self?.config.pusherKey = data.pusherKey
           self?.config.pusherCluster = data.pusherCluster
           self?.updateLauncherStyle(data)
-          self?.panelViewController?.updateWidgetData(data)
         case .failure(let error):
-          let errorMsg = String(describing: error)
-          print("[AlpsWindowManager] FAILED to fetch widget data!")
-          print("[AlpsWindowManager] Error: \(errorMsg)")
-          self?.panelViewController?.showError(errorMsg)
+          print("[AlpsWindowManager] Failed to fetch widget data: \(error)")
         }
       }
     }
