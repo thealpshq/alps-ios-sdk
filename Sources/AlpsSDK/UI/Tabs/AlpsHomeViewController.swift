@@ -8,7 +8,6 @@ class AlpsHomeViewController: UIViewController {
 
   private let scrollView = UIScrollView()
   private let stackView = UIStackView()
-  private let debugLabel = UILabel()
 
   init(
     config: AlpsConfig,
@@ -32,11 +31,6 @@ class AlpsHomeViewController: UIViewController {
     view.backgroundColor = .white
     setupUI()
     populateContent()
-
-    if widgetData == nil {
-      debugLabel.text = "⏳ Loading widget data..."
-      debugLabel.textColor = .systemOrange
-    }
   }
 
   private func setupUI() {
@@ -64,11 +58,6 @@ class AlpsHomeViewController: UIViewController {
       stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32),
     ])
 
-    debugLabel.numberOfLines = 0
-    debugLabel.font = UIFont.systemFont(ofSize: 11)
-    debugLabel.textColor = .systemGray
-    debugLabel.isHidden = true
-    stackView.addArrangedSubview(debugLabel)
   }
 
   private func populateContent() {
@@ -95,16 +84,17 @@ class AlpsHomeViewController: UIViewController {
     headerLeftStack.alignment = .leading
     headerHStack.addArrangedSubview(headerLeftStack)
 
-    let teamNameLabel = UILabel()
-    teamNameLabel.text = data.teamName ?? "Support"
-    teamNameLabel.font = UIFont.systemFont(ofSize: 11)
-    teamNameLabel.textColor = AlpsDesignTokens.textLight
-    headerLeftStack.addArrangedSubview(teamNameLabel)
+    let greetingLabel = UILabel()
+    let visitorName = config.visitorName?.split(separator: " ").first.map(String.init) ?? nil
+    greetingLabel.text = visitorName.map { "Hey \($0)," } ?? "Hey there,"
+    greetingLabel.font = UIFont.systemFont(ofSize: 13)
+    greetingLabel.textColor = UIColor(hex: "#DDDDDD")
+    headerLeftStack.addArrangedSubview(greetingLabel)
 
     let welcomeLabel = UILabel()
-    welcomeLabel.text = data.welcomeMessage ?? ""
+    welcomeLabel.text = data.welcomeMessage ?? "How can we help?"
     welcomeLabel.numberOfLines = 0
-    welcomeLabel.font = UIFont.systemFont(ofSize: 14)
+    welcomeLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
     welcomeLabel.textColor = .white
     headerLeftStack.addArrangedSubview(welcomeLabel)
 
@@ -368,6 +358,12 @@ class AlpsHomeViewController: UIViewController {
       chevron2.font = UIFont.systemFont(ofSize: 18)
       chevron2.textColor = AlpsDesignTokens.textLight
       rowStack.addArrangedSubview(chevron2)
+
+      let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCategory(_:)))
+      categoryRow.addGestureRecognizer(tapGesture)
+      categoryRow.isUserInteractionEnabled = true
+      categoryRow.tag = index
+      tapGesture.name = "category_\(category.id)"
     }
   }
 
@@ -379,19 +375,34 @@ class AlpsHomeViewController: UIViewController {
     panelViewController?.switchTab(to: .answers)
   }
 
+  @objc private func didTapCategory(_ gesture: UITapGestureRecognizer) {
+    guard let categoryView = gesture.view,
+          let widgetData = widgetData else { return }
+
+    let index = categoryView.tag
+    let displayCategories = Array(widgetData.categories.prefix(4))
+    guard index < displayCategories.count else { return }
+
+    let category = displayCategories[index]
+    let categoryVC = AlpsCategoryViewController(
+      config: config,
+      apiClient: apiClient,
+      category: category
+    )
+
+    if let navController = (parent as? AlpsPanelViewController)?.navigationController {
+      navController.pushViewController(categoryVC, animated: true)
+    }
+  }
+
   func updateWidgetData(_ data: WidgetDataResponse) {
     widgetData = data
-    debugLabel.isHidden = false
-    debugLabel.text = "✓ Data loaded: \(data.categories.count) categories"
-    debugLabel.textColor = .systemGreen
     stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     populateContent()
   }
 
   func showError(_ error: String) {
-    debugLabel.isHidden = false
-    debugLabel.text = "❌ Failed to load: \(error)"
-    debugLabel.textColor = .systemRed
+    print("[HomeVC] Error: \(error)")
   }
 
   private func formatDate(_ dateString: String) -> String {

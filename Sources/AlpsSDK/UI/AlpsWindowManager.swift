@@ -41,6 +41,8 @@ class AlpsWindowManager {
       return
     }
 
+    guard panelViewController?.presentingViewController == nil else { return }
+
     if panelViewController == nil {
       panelViewController = AlpsPanelViewController(
         config: config,

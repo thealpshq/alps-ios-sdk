@@ -57,6 +57,7 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
     searchField.textColor = AlpsDesignTokens.textMid
     searchField.borderStyle = .none
     searchField.delegate = self
+    searchField.addTarget(self, action: #selector(searchFieldDidChange), for: .editingChanged)
     searchField.translatesAutoresizingMaskIntoConstraints = false
     searchContainer.addSubview(searchField)
 
@@ -111,7 +112,7 @@ class AlpsAnswersViewController: UIViewController, UITableViewDataSource, UITabl
     updateEmptyState()
   }
 
-  func textFieldDidChangeSelection(_ UITextField: UITextField) {
+  @objc private func searchFieldDidChange() {
     searchTask?.cancel()
 
     guard let searchText = searchField.text, !searchText.isEmpty else {

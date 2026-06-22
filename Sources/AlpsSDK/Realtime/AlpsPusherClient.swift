@@ -4,15 +4,26 @@ import PusherSwift
 class AlpsPusherClient {
   private var pusher: Pusher?
   private var conversationChannel: PusherChannel?
+  private let apiBaseURL: String
+  private let widgetKey: String
 
   var onMessageReceived: ((Message) -> Void)?
   var onTypingIndicator: ((String) -> Void)?
   var onConversationStatusChanged: ((String) -> Void)?
 
+  init(apiBaseURL: String, widgetKey: String) {
+    self.apiBaseURL = apiBaseURL
+    self.widgetKey = widgetKey
+  }
+
   func connect(pusherKey: String, cluster: String, conversationId: String) {
-    let options = PusherClientOptions(
-      host: .cluster(cluster)
+    let authMethod = PusherClientOptions.AuthMethod.endpoint(
+      "\(apiBaseURL)/pusher/auth"
     )
+
+    var options = PusherClientOptions(host: .cluster(cluster))
+    options.authMethod = authMethod
+    options.attemptToReturnJSONObjectInEvent = true
 
     pusher = Pusher(key: pusherKey, options: options)
     pusher?.connect()

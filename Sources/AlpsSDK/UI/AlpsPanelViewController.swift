@@ -236,7 +236,11 @@ class AlpsPanelViewController: UIViewController {
     currentTab = tab
     updateTabButtonStates()
 
-    contentView.subviews.forEach { $0.removeFromSuperview() }
+    for child in children {
+      child.willMove(toParent: nil)
+      child.view.removeFromSuperview()
+      child.removeFromParent()
+    }
 
     switch tab {
     case .home:
@@ -286,7 +290,7 @@ class AlpsPanelViewController: UIViewController {
       )
     }
 
-    if let vc = homeViewController {
+    if let vc = homeViewController, vc.parent == nil {
       addChild(vc)
       vc.view.frame = contentView.bounds
       vc.view.translatesAutoresizingMaskIntoConstraints = false
@@ -311,7 +315,7 @@ class AlpsPanelViewController: UIViewController {
       )
     }
 
-    if let vc = messagesViewController {
+    if let vc = messagesViewController, vc.parent == nil {
       addChild(vc)
       vc.view.translatesAutoresizingMaskIntoConstraints = false
       contentView.addSubview(vc.view)
@@ -336,7 +340,7 @@ class AlpsPanelViewController: UIViewController {
       )
     }
 
-    if let vc = answersViewController {
+    if let vc = answersViewController, vc.parent == nil {
       addChild(vc)
       vc.view.translatesAutoresizingMaskIntoConstraints = false
       contentView.addSubview(vc.view)

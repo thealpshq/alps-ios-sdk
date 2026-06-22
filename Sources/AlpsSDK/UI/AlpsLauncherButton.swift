@@ -5,6 +5,7 @@ class AlpsLauncherButton: UIView {
 
   private let button = UIButton(type: .system)
   private let badgeView = UIView()
+  private let label = UILabel()
   private var launcherColor: UIColor = AlpsDesignTokens.dark
 
   override init(frame: CGRect) {
@@ -28,7 +29,6 @@ class AlpsLauncherButton: UIView {
     button.setImage(image, for: .normal)
     button.tintColor = .white
 
-    let label = UILabel()
     label.text = "Chat with us"
     label.font = .systemFont(ofSize: AlpsDesignTokens.fontBody, weight: .medium)
     label.textColor = .white
@@ -90,10 +90,7 @@ class AlpsLauncherButton: UIView {
   }
 
   func updateText(_ text: String) {
-    if let stack = subviews.first as? UIStackView,
-       let label = stack.arrangedSubviews.last as? UILabel {
-      label.text = text
-    }
+    label.text = text
   }
 
   func showUnreadBadge(_ count: Int) {

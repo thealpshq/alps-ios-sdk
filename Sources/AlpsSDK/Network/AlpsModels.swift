@@ -112,6 +112,13 @@ struct Conversation: Codable, Identifiable {
   let messages: [Message]?
 }
 
+struct ConversationDetail: Codable {
+  let id: String
+  let status: String
+  let customer: Customer
+  let messages: [Message]
+}
+
 struct Customer: Codable {
   let name: String?
   let email: String?

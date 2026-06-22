@@ -30,7 +30,7 @@ class AlpsMessagesViewController: UIViewController, UITableViewDataSource, UITab
   private func setupUI() {
     tableView.dataSource = self
     tableView.delegate = self
-    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    tableView.register(AlpsConversationCell.self, forCellReuseIdentifier: "cell")
     tableView.separatorStyle = .singleLine
     tableView.separatorColor = AlpsDesignTokens.border
     tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -74,8 +74,14 @@ class AlpsMessagesViewController: UIViewController, UITableViewDataSource, UITab
   }
 
   @objc private func didTapStartMessage() {
-    if let panelVC = parent as? AlpsPanelViewController {
-      panelVC.switchTab(to: .home)
+    let threadVC = AlpsThreadViewController(
+      config: config,
+      apiClient: apiClient,
+      conversationId: UUID().uuidString
+    )
+
+    if let nav = navigationController ?? (parent?.navigationController) {
+      nav.pushViewController(threadVC, animated: true)
     }
   }
 
@@ -123,86 +129,9 @@ class AlpsMessagesViewController: UIViewController, UITableViewDataSource, UITab
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AlpsConversationCell
     let conv = conversations[indexPath.row]
-
-    cell.contentView.subviews.forEach { $0.removeFromSuperview() }
-    cell.selectionStyle = .gray
-    cell.backgroundColor = .white
-
-    let avatarView = UIView()
-    avatarView.backgroundColor = AlpsDesignTokens.avatarBg
-    avatarView.layer.cornerRadius = 19
-    avatarView.clipsToBounds = true
-    avatarView.translatesAutoresizingMaskIntoConstraints = false
-    avatarView.widthAnchor.constraint(equalToConstant: 38).isActive = true
-    avatarView.heightAnchor.constraint(equalToConstant: 38).isActive = true
-    cell.contentView.addSubview(avatarView)
-
-    let initials = UILabel()
-    initials.text = "?"
-    initials.textColor = .white
-    initials.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-    initials.textAlignment = .center
-    initials.translatesAutoresizingMaskIntoConstraints = false
-    avatarView.addSubview(initials)
-
-    NSLayoutConstraint.activate([
-      initials.centerXAnchor.constraint(equalTo: avatarView.centerXAnchor),
-      initials.centerYAnchor.constraint(equalTo: avatarView.centerYAnchor),
-    ])
-
-    let titleLabel = UILabel()
-    titleLabel.text = "Conversation"
-    titleLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-    titleLabel.textColor = AlpsDesignTokens.textMid
-    titleLabel.translatesAutoresizingMaskIntoConstraints = false
-    cell.contentView.addSubview(titleLabel)
-
-    let timeLabel = UILabel()
-    timeLabel.text = formatDate(conv.lastMessageAt ?? conv.createdAt)
-    timeLabel.font = UIFont.systemFont(ofSize: 12)
-    timeLabel.textColor = AlpsDesignTokens.textLight
-    timeLabel.translatesAutoresizingMaskIntoConstraints = false
-    cell.contentView.addSubview(timeLabel)
-
-    let messageLabel = UILabel()
-    let preview = (conv.lastMessage?.content ?? "No messages").prefix(60)
-    messageLabel.text = String(preview)
-    messageLabel.font = UIFont.systemFont(ofSize: 12)
-    messageLabel.textColor = AlpsDesignTokens.textBody
-    messageLabel.numberOfLines = 1
-    messageLabel.translatesAutoresizingMaskIntoConstraints = false
-    cell.contentView.addSubview(messageLabel)
-
-    let unreadBadge = UIView()
-    unreadBadge.backgroundColor = AlpsDesignTokens.dark
-    unreadBadge.layer.cornerRadius = 4
-    unreadBadge.translatesAutoresizingMaskIntoConstraints = false
-    unreadBadge.widthAnchor.constraint(equalToConstant: 8).isActive = true
-    unreadBadge.heightAnchor.constraint(equalToConstant: 8).isActive = true
-    cell.contentView.addSubview(unreadBadge)
-
-    NSLayoutConstraint.activate([
-      avatarView.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 12),
-      avatarView.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
-
-      titleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 12),
-      titleLabel.leftAnchor.constraint(equalTo: avatarView.rightAnchor, constant: 12),
-      titleLabel.rightAnchor.constraint(equalTo: unreadBadge.leftAnchor, constant: -8),
-
-      timeLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
-      timeLabel.leftAnchor.constraint(equalTo: avatarView.rightAnchor, constant: 12),
-
-      messageLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 2),
-      messageLabel.leftAnchor.constraint(equalTo: avatarView.rightAnchor, constant: 12),
-      messageLabel.rightAnchor.constraint(equalTo: cell.contentView.rightAnchor, constant: -12),
-      messageLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -12),
-
-      unreadBadge.rightAnchor.constraint(equalTo: cell.contentView.rightAnchor, constant: -12),
-      unreadBadge.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-    ])
-
+    cell.configure(with: conv)
     return cell
   }
 

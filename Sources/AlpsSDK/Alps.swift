@@ -70,8 +70,8 @@ public final class Alps {
   public static func logout() {
     DispatchQueue.main.async {
       shared.windowManager?.hidePanel()
-      AlpsVisitorStore.clear()
       if let config = shared.config {
+        AlpsVisitorStore.clearForWidget(config.widgetKey)
         config.visitorName = nil
         config.visitorEmail = nil
       }

@@ -4,37 +4,39 @@ enum AlpsEndpoints {
   case widgetData(widgetKey: String)
   case sendMessage(SendMessageRequest)
   case customerConversations(widgetKey: String, email: String)
+  case conversationMessages(conversationId: String)
   case search(widgetKey: String, keyword: String)
   case pusherAuth
 
-  private var baseURL: String {
-    "https://api.tryalps.com/api/v1"
-  }
+  private static let baseURL = "https://api.tryalps.com/api/v1"
 
   var url: URL? {
     switch self {
     case .widgetData(let widgetKey):
-      return URL(string: "\(baseURL)/user/widget-data/\(widgetKey)")
+      return URL(string: "\(Self.baseURL)/user/widget-data/\(widgetKey)")
 
     case .sendMessage:
-      return URL(string: "\(baseURL)/message/customer")
+      return URL(string: "\(Self.baseURL)/message/customer")
 
     case .customerConversations(let widgetKey, let email):
       let encoded = email.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? email
-      return URL(string: "\(baseURL)/message/customer/conversations?widgetKey=\(widgetKey)&email=\(encoded)")
+      return URL(string: "\(Self.baseURL)/message/customer/conversations?widgetKey=\(widgetKey)&email=\(encoded)")
+
+    case .conversationMessages(let conversationId):
+      return URL(string: "\(Self.baseURL)/message/conversations/\(conversationId)")
 
     case .search(let widgetKey, let keyword):
       let encoded = keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? keyword
-      return URL(string: "\(baseURL)/report/search/\(widgetKey)?keyword=\(encoded)")
+      return URL(string: "\(Self.baseURL)/report/search/\(widgetKey)?keyword=\(encoded)")
 
     case .pusherAuth:
-      return URL(string: "\(baseURL)/pusher/auth")
+      return URL(string: "\(Self.baseURL)/pusher/auth")
     }
   }
 
   var method: String {
     switch self {
-    case .widgetData, .customerConversations, .search:
+    case .widgetData, .customerConversations, .conversationMessages, .search:
       return "GET"
     case .sendMessage, .pusherAuth:
       return "POST"
@@ -54,15 +56,6 @@ enum AlpsEndpoints {
     var request = URLRequest(url: url)
     request.httpMethod = method
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-    if let body = body as? SendMessageRequest {
-      do {
-        request.httpBody = try JSONEncoder().encode(body)
-      } catch {
-        return nil
-      }
-    }
-
     return request
   }
 }

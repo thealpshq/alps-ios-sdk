@@ -61,6 +61,14 @@ class AlpsAPIClient {
     request(endpoint, responseType: CustomerConversationsResponse.self, completion: completion)
   }
 
+  func fetchConversationMessages(
+    conversationId: String,
+    completion: @escaping (Result<ConversationDetail, Error>) -> Void
+  ) {
+    let endpoint = AlpsEndpoints.conversationMessages(conversationId: conversationId)
+    request(endpoint, responseType: ConversationDetail.self, completion: completion)
+  }
+
   // MARK: - Search
 
   func search(

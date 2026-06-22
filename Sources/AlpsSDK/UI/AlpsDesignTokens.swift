@@ -5,6 +5,7 @@ struct AlpsDesignTokens {
   static let panelBg = UIColor(hex: "#FFFFFF")
   static let dark = UIColor(hex: "#18181B")
   static var accent = UIColor(hex: "#18181B")
+  static var themeColor = UIColor(hex: "#6400E6")
   static let border = UIColor(hex: "#E4E4E7")
   static let textMid = UIColor(hex: "#3F3F46")
   static let textBody = UIColor(hex: "#71717A")

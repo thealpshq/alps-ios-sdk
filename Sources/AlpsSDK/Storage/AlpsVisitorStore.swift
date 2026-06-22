@@ -42,11 +42,6 @@ class AlpsVisitorStore {
     return defaults.string(forKey: key)
   }
 
-  static func clear() {
-    let domain = Bundle.main.bundleIdentifier ?? ""
-    defaults.removePersistentDomain(forName: domain)
-  }
-
   static func clearForWidget(_ widgetKey: String) {
     let visitorKey = "alps-visitor-\(widgetKey)"
     let convKey = "alps-conv-\(widgetKey)"
