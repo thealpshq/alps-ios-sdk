@@ -207,7 +207,7 @@ class AlpsHomeViewController: UIViewController {
       chatCard.layer.cornerRadius = 8
       chatCard.translatesAutoresizingMaskIntoConstraints = false
       chatCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
-      actionCardsStack.addArrangedSubview(chatCard)
+      actionCardsStack?.addArrangedSubview(chatCard)
 
       let chatStack = UIStackView()
       chatStack.axis = .vertical
@@ -251,7 +251,7 @@ class AlpsHomeViewController: UIViewController {
             historyCard.layer.cornerRadius = 8
             historyCard.translatesAutoresizingMaskIntoConstraints = false
             historyCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
-            self?.actionCardsStack.addArrangedSubview(historyCard)
+            self?.actionCardsStack?.addArrangedSubview(historyCard)
 
             let historyStack = UIStackView()
             historyStack.axis = .vertical
