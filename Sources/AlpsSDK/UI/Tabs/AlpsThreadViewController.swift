@@ -204,18 +204,25 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
       closedLabel.leftAnchor.constraint(equalTo: closedNotice.leftAnchor, constant: 8),
     ])
 
+    let inputBox = UIView()
+    inputBox.layer.borderWidth = 1.5
+    inputBox.layer.borderColor = AlpsDesignTokens.border.cgColor
+    inputBox.layer.cornerRadius = 12
+    inputBox.translatesAutoresizingMaskIntoConstraints = false
+    inputContainer.addSubview(inputBox)
+
     messageInput.font = UIFont.systemFont(ofSize: 13)
     messageInput.translatesAutoresizingMaskIntoConstraints = false
-    messageInput.backgroundColor = .white
+    messageInput.backgroundColor = .clear
     messageInput.textColor = AlpsDesignTokens.textMid
     messageInput.delegate = self
     messageInput.isScrollEnabled = false
-    inputContainer.addSubview(messageInput)
+    inputBox.addSubview(messageInput)
 
     emojiButton.setTitle("😊", for: .normal)
     emojiButton.translatesAutoresizingMaskIntoConstraints = false
     emojiButton.addTarget(self, action: #selector(didTapEmoji), for: .touchUpInside)
-    inputContainer.addSubview(emojiButton)
+    inputBox.addSubview(emojiButton)
 
     attachmentButton.translatesAutoresizingMaskIntoConstraints = false
     let attachConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
@@ -223,7 +230,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
     attachmentButton.setImage(attachImage, for: .normal)
     attachmentButton.tintColor = AlpsDesignTokens.textBody
     attachmentButton.addTarget(self, action: #selector(didTapAttach), for: .touchUpInside)
-    inputContainer.addSubview(attachmentButton)
+    inputBox.addSubview(attachmentButton)
 
     sendButton.translatesAutoresizingMaskIntoConstraints = false
     let sendConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
@@ -235,14 +242,7 @@ class AlpsThreadViewController: UIViewController, UITableViewDataSource, UITable
     sendButton.widthAnchor.constraint(equalToConstant: 32).isActive = true
     sendButton.heightAnchor.constraint(equalToConstant: 32).isActive = true
     sendButton.addTarget(self, action: #selector(didTapSend), for: .touchUpInside)
-    inputContainer.addSubview(sendButton)
-
-    let inputBox = UIView()
-    inputBox.layer.borderWidth = 1.5
-    inputBox.layer.borderColor = AlpsDesignTokens.border.cgColor
-    inputBox.layer.cornerRadius = 12
-    inputBox.translatesAutoresizingMaskIntoConstraints = false
-    inputContainer.addSubview(inputBox)
+    inputBox.addSubview(sendButton)
 
     NSLayoutConstraint.activate([
       inputBox.topAnchor.constraint(equalTo: closedNotice.isHidden ? inputContainer.topAnchor : closedNotice.bottomAnchor, constant: 12),

@@ -78,6 +78,39 @@ class AlpsHomeViewController: UIViewController {
     headerHStack.translatesAutoresizingMaskIntoConstraints = false
     headerCard.addSubview(headerHStack)
 
+    let avatarView = UIImageView()
+    avatarView.contentMode = .scaleAspectFill
+    avatarView.layer.cornerRadius = 21
+    avatarView.clipsToBounds = true
+    avatarView.backgroundColor = AlpsDesignTokens.avatarBg
+    avatarView.translatesAutoresizingMaskIntoConstraints = false
+    avatarView.widthAnchor.constraint(equalToConstant: 42).isActive = true
+    avatarView.heightAnchor.constraint(equalToConstant: 42).isActive = true
+    headerHStack.addArrangedSubview(avatarView)
+
+    if let teamAvatarUrl = data.teamAvatarUrl, let url = URL(string: teamAvatarUrl) {
+      URLSession.shared.dataTask(with: url) { imageData, _, _ in
+        DispatchQueue.main.async {
+          if let imageData = imageData, let image = UIImage(data: imageData) {
+            avatarView.image = image
+          }
+        }
+      }.resume()
+    } else {
+      let initials = UILabel()
+      initials.text = (data.teamName?.prefix(1) ?? "A").uppercased()
+      initials.textColor = .white
+      initials.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+      initials.textAlignment = .center
+      initials.translatesAutoresizingMaskIntoConstraints = false
+      avatarView.addSubview(initials)
+
+      NSLayoutConstraint.activate([
+        initials.centerXAnchor.constraint(equalTo: avatarView.centerXAnchor),
+        initials.centerYAnchor.constraint(equalTo: avatarView.centerYAnchor),
+      ])
+    }
+
     let headerLeftStack = UIStackView()
     headerLeftStack.axis = .vertical
     headerLeftStack.spacing = 4
@@ -98,154 +131,167 @@ class AlpsHomeViewController: UIViewController {
     welcomeLabel.textColor = .white
     headerLeftStack.addArrangedSubview(welcomeLabel)
 
-    NSLayoutConstraint.activate([
-      headerHStack.topAnchor.constraint(equalTo: headerCard.topAnchor, constant: 16),
-      headerHStack.leftAnchor.constraint(equalTo: headerCard.leftAnchor, constant: 16),
-      headerHStack.rightAnchor.constraint(equalTo: headerCard.rightAnchor, constant: -16),
-      headerHStack.bottomAnchor.constraint(equalTo: headerCard.bottomAnchor, constant: -16),
-    ])
-
-    let spacer = UIView()
-    headerHStack.addArrangedSubview(spacer)
-
-    let agents = data.onlineAgents ?? []
-    let agentCount = min(agents.count, 3)
-    let avatarContainer = UIView()
-    avatarContainer.translatesAutoresizingMaskIntoConstraints = false
-    avatarContainer.widthAnchor.constraint(equalToConstant: CGFloat(agentCount) * 16 + 12).isActive = true
-    avatarContainer.heightAnchor.constraint(equalToConstant: 28).isActive = true
-    headerHStack.addArrangedSubview(avatarContainer)
-
-    let displayAgents = Array(agents.prefix(3))
-
-    for (index, agent) in displayAgents.enumerated() {
-      let avatar = UIView()
-      avatar.backgroundColor = AlpsDesignTokens.avatarBg
-      avatar.layer.cornerRadius = 14
-      avatar.clipsToBounds = true
-      avatar.translatesAutoresizingMaskIntoConstraints = false
-      avatar.widthAnchor.constraint(equalToConstant: 28).isActive = true
-      avatar.heightAnchor.constraint(equalToConstant: 28).isActive = true
-      avatarContainer.addSubview(avatar)
-
-      let initial = UILabel()
-      let firstName = agent.firstName ?? "A"
-      initial.text = String(firstName.prefix(1)).uppercased()
-      initial.textColor = .white
-      initial.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
-      initial.textAlignment = .center
-      initial.translatesAutoresizingMaskIntoConstraints = false
-      avatar.addSubview(initial)
-
-      NSLayoutConstraint.activate([
-        initial.centerXAnchor.constraint(equalTo: avatar.centerXAnchor),
-        initial.centerYAnchor.constraint(equalTo: avatar.centerYAnchor),
-      ])
-
-      let xOffset = CGFloat(index) * 16
-      NSLayoutConstraint.activate([
-        avatar.leftAnchor.constraint(equalTo: avatarContainer.leftAnchor, constant: xOffset),
-        avatar.topAnchor.constraint(equalTo: avatarContainer.topAnchor),
-      ])
-
-      if let profileURL = agent.profilePicture, let url = URL(string: profileURL) {
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-          DispatchQueue.main.async {
-            if let data = data, let image = UIImage(data: data) {
-              let imageView = UIImageView(image: image)
-              imageView.contentMode = .scaleAspectFill
-              imageView.clipsToBounds = true
-              imageView.translatesAutoresizingMaskIntoConstraints = false
-              avatar.addSubview(imageView)
-              NSLayoutConstraint.activate([
-                imageView.topAnchor.constraint(equalTo: avatar.topAnchor),
-                imageView.leftAnchor.constraint(equalTo: avatar.leftAnchor),
-                imageView.rightAnchor.constraint(equalTo: avatar.rightAnchor),
-                imageView.bottomAnchor.constraint(equalTo: avatar.bottomAnchor),
-              ])
-              initial.isHidden = true
-            }
-          }
-        }.resume()
-      }
-    }
-
-    let actionCard = UIView()
-    actionCard.backgroundColor = .white
-    actionCard.layer.borderWidth = 1
-    actionCard.layer.borderColor = AlpsDesignTokens.border.cgColor
-    actionCard.layer.cornerRadius = AlpsDesignTokens.radiusCard
-    actionCard.clipsToBounds = true
-    actionCard.translatesAutoresizingMaskIntoConstraints = false
-    actionCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 80).isActive = true
-    stackView.addArrangedSubview(actionCard)
-
-    let actionStack = UIStackView()
-    actionStack.axis = .vertical
-    actionStack.spacing = 8
-    actionStack.alignment = .fill
-    actionStack.translatesAutoresizingMaskIntoConstraints = false
-    actionCard.addSubview(actionStack)
-
-    NSLayoutConstraint.activate([
-      actionStack.topAnchor.constraint(equalTo: actionCard.topAnchor, constant: 12),
-      actionStack.leftAnchor.constraint(equalTo: actionCard.leftAnchor, constant: 12),
-      actionStack.rightAnchor.constraint(equalTo: actionCard.rightAnchor, constant: -12),
-      actionStack.bottomAnchor.constraint(equalTo: actionCard.bottomAnchor, constant: -12),
-    ])
-
-    let titleStack = UIStackView()
-    titleStack.axis = .horizontal
-    titleStack.spacing = 8
-    titleStack.alignment = .center
-    actionStack.addArrangedSubview(titleStack)
-
-    let actionLabel = UILabel()
-    actionLabel.text = "Continue conversation"
-    actionLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-    actionLabel.textColor = AlpsDesignTokens.textMid
-    titleStack.addArrangedSubview(actionLabel)
-
-    titleStack.addArrangedSubview(UIView())
-
-    let chevron = UILabel()
-    chevron.text = "›"
-    chevron.font = UIFont.systemFont(ofSize: 20)
-    chevron.textColor = AlpsDesignTokens.textBody
-    titleStack.addArrangedSubview(chevron)
+    let actionCardsStack = UIStackView()
+    actionCardsStack.axis = .vertical
+    actionCardsStack.spacing = 8
+    actionCardsStack.translatesAutoresizingMaskIntoConstraints = false
+    headerLeftStack.addArrangedSubview(actionCardsStack)
 
     if config.conversationId != nil {
+      let continueCard = UIView()
+      continueCard.backgroundColor = .white
+      continueCard.layer.cornerRadius = 8
+      continueCard.translatesAutoresizingMaskIntoConstraints = false
+      continueCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
+      actionCardsStack.addArrangedSubview(continueCard)
+
+      let continueStack = UIStackView()
+      continueStack.axis = .vertical
+      continueStack.spacing = 8
+      continueStack.alignment = .fill
+      continueStack.translatesAutoresizingMaskIntoConstraints = false
+      continueCard.addSubview(continueStack)
+
+      NSLayoutConstraint.activate([
+        continueStack.topAnchor.constraint(equalTo: continueCard.topAnchor, constant: 10),
+        continueStack.leftAnchor.constraint(equalTo: continueCard.leftAnchor, constant: 12),
+        continueStack.rightAnchor.constraint(equalTo: continueCard.rightAnchor, constant: -12),
+        continueStack.bottomAnchor.constraint(equalTo: continueCard.bottomAnchor, constant: -10),
+      ])
+
+      let titleLabel = UILabel()
+      titleLabel.text = "Continue conversation"
+      titleLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+      titleLabel.textColor = AlpsDesignTokens.textMid
+      continueStack.addArrangedSubview(titleLabel)
+
+      let messageLabel = UILabel()
+      messageLabel.font = UIFont.systemFont(ofSize: 12)
+      messageLabel.textColor = AlpsDesignTokens.textBody
+      messageLabel.numberOfLines = 1
+      continueStack.addArrangedSubview(messageLabel)
+
+      let timestampLabel = UILabel()
+      timestampLabel.font = UIFont.systemFont(ofSize: 12)
+      timestampLabel.textColor = AlpsDesignTokens.textLight
+      continueStack.addArrangedSubview(timestampLabel)
+
       guard let email = config.visitorEmail else { return }
 
       apiClient.fetchCustomerConversations(email: email) { [weak self] result in
         DispatchQueue.main.async {
           switch result {
           case .success(let response):
-            if let first = response.conversations.first, let lastMsg = first.lastMessage {
-              let preview = String((lastMsg.content).prefix(60))
-              let previewLabel = UILabel()
-              previewLabel.text = preview
-              previewLabel.font = UIFont.systemFont(ofSize: 12)
-              previewLabel.textColor = AlpsDesignTokens.textBody
-              previewLabel.numberOfLines = 2
-              actionStack.addArrangedSubview(previewLabel)
+            if let first = response.conversations.first {
+              messageLabel.text = String((first.lastMessage?.content ?? "No messages").prefix(40))
 
-              let timeLabel = UILabel()
-              timeLabel.text = self?.formatDate(first.lastMessageAt ?? first.createdAt) ?? ""
-              timeLabel.font = UIFont.systemFont(ofSize: 12)
-              timeLabel.textColor = AlpsDesignTokens.textLight
-              actionStack.addArrangedSubview(timeLabel)
+              let formatter = ISO8601DateFormatter()
+              if let date = formatter.date(from: first.lastMessageAt ?? first.createdAt) {
+                let relativeFormatter = RelativeDateTimeFormatter()
+                timestampLabel.text = relativeFormatter.localizedString(for: date, relativeTo: Date())
+              }
             }
           case .failure:
             break
           }
         }
       }
+
+      continueCard.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapContinueAction)))
+      continueCard.isUserInteractionEnabled = true
+    } else {
+      let chatCard = UIView()
+      chatCard.backgroundColor = .white
+      chatCard.layer.cornerRadius = 8
+      chatCard.translatesAutoresizingMaskIntoConstraints = false
+      chatCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
+      actionCardsStack.addArrangedSubview(chatCard)
+
+      let chatStack = UIStackView()
+      chatStack.axis = .vertical
+      chatStack.spacing = 2
+      chatStack.alignment = .fill
+      chatStack.translatesAutoresizingMaskIntoConstraints = false
+      chatCard.addSubview(chatStack)
+
+      NSLayoutConstraint.activate([
+        chatStack.topAnchor.constraint(equalTo: chatCard.topAnchor, constant: 10),
+        chatStack.leftAnchor.constraint(equalTo: chatCard.leftAnchor, constant: 12),
+        chatStack.rightAnchor.constraint(equalTo: chatCard.rightAnchor, constant: -12),
+        chatStack.bottomAnchor.constraint(equalTo: chatCard.bottomAnchor, constant: -10),
+      ])
+
+      let chatLabel = UILabel()
+      chatLabel.text = "Chat with us"
+      chatLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+      chatLabel.textColor = AlpsDesignTokens.textMid
+      chatStack.addArrangedSubview(chatLabel)
+
+      let chatSubLabel = UILabel()
+      chatSubLabel.text = "Our agents are ready to help"
+      chatSubLabel.font = UIFont.systemFont(ofSize: 12)
+      chatSubLabel.textColor = AlpsDesignTokens.textBody
+      chatStack.addArrangedSubview(chatSubLabel)
+
+      chatCard.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapContinueAction)))
+      chatCard.isUserInteractionEnabled = true
     }
 
-    let tapAction = UITapGestureRecognizer(target: self, action: #selector(didTapContinueAction))
-    actionCard.addGestureRecognizer(tapAction)
-    actionCard.isUserInteractionEnabled = true
+    guard let email = config.visitorEmail else { return }
+    apiClient.fetchCustomerConversations(email: email) { [weak self] result in
+      DispatchQueue.main.async {
+        switch result {
+        case .success(let response):
+          let closedConversations = response.conversations.filter { $0.status != "active" }
+          if !closedConversations.isEmpty {
+            let historyCard = UIView()
+            historyCard.backgroundColor = .white
+            historyCard.layer.cornerRadius = 8
+            historyCard.translatesAutoresizingMaskIntoConstraints = false
+            historyCard.heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
+            self?.actionCardsStack.addArrangedSubview(historyCard)
+
+            let historyStack = UIStackView()
+            historyStack.axis = .vertical
+            historyStack.spacing = 2
+            historyStack.alignment = .fill
+            historyStack.translatesAutoresizingMaskIntoConstraints = false
+            historyCard.addSubview(historyStack)
+
+            NSLayoutConstraint.activate([
+              historyStack.topAnchor.constraint(equalTo: historyCard.topAnchor, constant: 10),
+              historyStack.leftAnchor.constraint(equalTo: historyCard.leftAnchor, constant: 12),
+              historyStack.rightAnchor.constraint(equalTo: historyCard.rightAnchor, constant: -12),
+              historyStack.bottomAnchor.constraint(equalTo: historyCard.bottomAnchor, constant: -10),
+            ])
+
+            let historyLabel = UILabel()
+            historyLabel.text = "Conversation History"
+            historyLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+            historyLabel.textColor = AlpsDesignTokens.textMid
+            historyStack.addArrangedSubview(historyLabel)
+
+            let countLabel = UILabel()
+            countLabel.text = "\(closedConversations.count) past \(closedConversations.count == 1 ? "conversation" : "conversations")"
+            countLabel.font = UIFont.systemFont(ofSize: 12)
+            countLabel.textColor = AlpsDesignTokens.textBody
+            historyStack.addArrangedSubview(countLabel)
+
+            historyCard.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self?.didTapContinueAction)))
+            historyCard.isUserInteractionEnabled = true
+          }
+        case .failure:
+          break
+        }
+      }
+    }
+
+    NSLayoutConstraint.activate([
+      headerHStack.topAnchor.constraint(equalTo: headerCard.topAnchor, constant: 16),
+      headerHStack.leftAnchor.constraint(equalTo: headerCard.leftAnchor, constant: 16),
+      headerHStack.rightAnchor.constraint(equalTo: headerCard.rightAnchor, constant: -16),
+      headerHStack.bottomAnchor.constraint(equalTo: headerCard.bottomAnchor, constant: -16),
+    ])
 
     let findCard = UIView()
     findCard.backgroundColor = .white
